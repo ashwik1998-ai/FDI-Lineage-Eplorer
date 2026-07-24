@@ -1,0 +1,25 @@
+# Dependency folders
+node_modules/
+
+# Production build output
+dist/
+
+# Local databases and caches
+*.db
+*.db-journal
+cache/
+
+# Executables (Turso CLI tools)
+*.exe
+*.zip
+
+# Local environment variables containing secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
