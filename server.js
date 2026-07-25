@@ -419,6 +419,25 @@ Do not include any conversational filler, markdown formatting (like \`\`\`json .
         cleanJson = cleanJson.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
       }
       parsedMatches = JSON.parse(cleanJson);
+      
+      // Ensure the subject area name is the official full name from the catalog
+      if (Array.isArray(parsedMatches)) {
+        parsedMatches = parsedMatches.map(m => {
+          const ptLower = (m.presentationTable || '').toLowerCase().trim();
+          const pcLower = (m.presentationColumn || '').toLowerCase().trim();
+          
+          // Search in our index for the matching table and column
+          const matched = staticSearchEntries.find(entry => 
+            (entry.pt || '').toLowerCase().trim() === ptLower &&
+            (entry.pc || '').toLowerCase().trim() === pcLower
+          );
+          
+          if (matched && matched.sa) {
+            m.subjectArea = matched.sa; // Overwrite with official full name
+          }
+          return m;
+        });
+      }
     } catch (parseErr) {
       console.error('Failed to parse AI matches as JSON:', parseErr.message);
     }
