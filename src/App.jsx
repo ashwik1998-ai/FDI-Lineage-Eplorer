@@ -16,9 +16,43 @@ import TableNode from './components/TableNode';
 const nodeTypes = { tableNode: TableNode };
 const RECENT_KEY = 'fdi_recent_v2';
 
-// ─── Frontend In-Memory Caches ───────────────────────────────────────────────
-const fdiLineageCache = {};
-const otbiLineageCache = {};
+// ─── Cache Version (bump this to invalidate all cached data after schema changes) ───
+const CACHE_VERSION = 'v3';
+const CACHE_PREFIX = `fdi_${CACHE_VERSION}_`;
+
+// ─── sessionStorage-backed lineage cache ─────────────────────────────────────
+// Survives browser refresh. Uses sessionStorage (cleared when tab/window closes).
+// Falls back to a plain object if sessionStorage is unavailable or quota exceeded.
+const _memFallback = {};
+
+function ssGet(key) {
+  try {
+    const raw = sessionStorage.getItem(CACHE_PREFIX + key);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return _memFallback[key] || null; }
+}
+
+function ssSet(key, value) {
+  try {
+    sessionStorage.setItem(CACHE_PREFIX + key, JSON.stringify(value));
+  } catch {
+    // If sessionStorage is full, trim oldest entries and retry
+    try {
+      // Remove oldest half of our cache entries
+      const ours = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith(CACHE_PREFIX)) ours.push(k);
+      }
+      ours.slice(0, Math.ceil(ours.length / 2)).forEach(k => sessionStorage.removeItem(k));
+      sessionStorage.setItem(CACHE_PREFIX + key, JSON.stringify(value));
+    } catch {
+      _memFallback[key] = value;
+    }
+  }
+}
+
+// ─── Per-request in-memory caches (survive within same tab session) ──────────
 const matchCache = {};
 const explanationCache = {};
 
@@ -275,8 +309,9 @@ export default function App() {
   useEffect(() => {
     if (workspace !== 'fdi' || !selectedSA) return;
 
-    if (fdiLineageCache[selectedSA]) {
-      const cached = fdiLineageCache[selectedSA];
+    // 1. Check sessionStorage first (survives refresh even after server restart)
+    const cached = ssGet(`fdi_${selectedSA}`);
+    if (cached) {
       setNodes(cached.nodes);
       setEdges(cached.edges);
       setMappings(cached.mappings);
@@ -296,7 +331,8 @@ export default function App() {
         const edgesList = data.edges || [];
         const mappingsList = data.mappings || [];
         
-        fdiLineageCache[selectedSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        // Store in sessionStorage so refresh = 0 DB reads
+        ssSet(`fdi_${selectedSA}`, { nodes: nodesList, edges: edgesList, mappings: mappingsList });
         
         setNodes(nodesList);
         setEdges(edgesList);
@@ -312,8 +348,9 @@ export default function App() {
   useEffect(() => {
     if (workspace !== 'otbi' || !selectedOtbiSA) return;
 
-    if (otbiLineageCache[selectedOtbiSA]) {
-      const cached = otbiLineageCache[selectedOtbiSA];
+    // 1. Check sessionStorage first
+    const cached = ssGet(`otbi_${selectedOtbiSA}`);
+    if (cached) {
       setNodes(cached.nodes);
       setEdges(cached.edges);
       setMappings(cached.mappings);
@@ -333,7 +370,8 @@ export default function App() {
         const edgesList = data.edges || [];
         const mappingsList = data.mappings || [];
         
-        otbiLineageCache[selectedOtbiSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        // Store in sessionStorage so refresh = 0 DB reads
+        ssSet(`otbi_${selectedOtbiSA}`, { nodes: nodesList, edges: edgesList, mappings: mappingsList });
         
         setNodes(nodesList);
         setEdges(edgesList);
@@ -346,8 +384,8 @@ export default function App() {
   useEffect(() => {
     if (!compareMode || !compareSA) return;
 
-    if (fdiLineageCache[compareSA]) {
-      const cached = fdiLineageCache[compareSA];
+    const cached = ssGet(`fdi_${compareSA}`);
+    if (cached) {
       setCmpNodes(cached.nodes);
       setCmpEdges(cached.edges);
       setCmpMappings(cached.mappings);
@@ -363,7 +401,7 @@ export default function App() {
         const edgesList = data.edges || [];
         const mappingsList = data.mappings || [];
         
-        fdiLineageCache[compareSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        ssSet(`fdi_${compareSA}`, { nodes: nodesList, edges: edgesList, mappings: mappingsList });
         
         setCmpNodes(nodesList);
         setCmpEdges(edgesList);
