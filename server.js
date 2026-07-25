@@ -573,12 +573,13 @@ Analyze the candidates and select/rank the top 3 most likely matching FDI column
 You MUST output a valid JSON array containing exactly 3 objects (or fewer if there are not enough candidates).
 Each object in the array must contain these exact keys:
 - "rank": string (e.g., "1st", "2nd", "3rd")
-- "subjectArea": string (FDI Subject Area name)
-- "presentationTable": string (FDI Presentation Table name)
-- "presentationColumn": string (FDI Presentation Column name)
+- "subjectArea": string (Verbatim full FDI Subject Area name from the candidates list, e.g., "Financials - AP Invoices". DO NOT shorten, generalize, or summarize this name under any circumstances!)
+- "presentationTable": string (Verbatim FDI Presentation Table name from candidates list)
+- "presentationColumn": string (Verbatim FDI Presentation Column name from candidates list)
 - "score": string (Confidence percentage, e.g., "95%")
 - "explanation": string (Brief explanation of why it matches)
 
+You MUST use the exact, verbatim values for "subjectArea", "presentationTable", and "presentationColumn" as they appear in the candidate list.
 Do not include any conversational filler, markdown formatting (like \`\`\`json ... \`\`\`) or text outside the JSON array. Output only the raw valid JSON.`;
     
     const aiResult = await callGrok(systemPrompt, userPrompt);
