@@ -172,135 +172,30 @@ app.get('/api/search', async (req, res) => {
 });
 
 // ── ROUTE 5: GET /api/lineage/:slug ──────────────────────────────────────────
-// Each lineage is read ONCE then cached in memory, subsequent = 0 reads
+// 100% static file read — ZERO database reads
 app.get('/api/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
     const cacheKey = slug.toLowerCase();
+    
+    // Check in-memory cache first
     if (fdiLineageDataCache[cacheKey]) {
       return res.json(fdiLineageDataCache[cacheKey]);
     }
 
-    const sas = cachedSubjectAreas || await loadSubjectAreas();
-    const saInfo = sas.find(x => x.slug === slug);
-    if (!saInfo) {
-      return res.status(404).json({ error: 'Subject Area not found' });
+    // Load from pre-baked static file
+    const filePath = path.join(__dirname, 'static_lineage', 'fdi', `${cacheKey}.json`);
+    if (fs.existsSync(filePath)) {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      fdiLineageDataCache[cacheKey] = data;
+      return res.json(data);
     }
 
-    // Run all pillar queries in PARALLEL using Promise.all instead of sequential loops
-    const pillarQueries = saInfo.pillars.map(pillar => {
-      const table = `${pillar.toLowerCase()}_semantic_model_lineage`;
-      return db.execute({
-        sql: `SELECT presentation_table, presentation_column, physical_table, physical_column 
-              FROM ${table} 
-              WHERE subject_area = ?`,
-        args: [saInfo.name]
-      }).then(r => r.rows).catch(err => {
-        console.error(`Failed to query lineage from ${table}:`, err.message);
-        return [];
-      });
-    });
-
-    const pillarResults = await Promise.all(pillarQueries);
-    const mappingsRows = pillarResults.flat();
-
-    // Build Nodes and Edges dynamically
-    const nodesDict = {};
-    const connectionsSet = new Set();
-    const mappings = [];
-    
-    mappingsRows.forEach(r => {
-      const presTable = r.presentation_table;
-      const presCol = r.presentation_column;
-      const physTable = r.physical_table;
-      const physCol = r.physical_column;
-
-      const isPhysValInvalid = !physTable || physTable === 'NaN' || String(physTable).toLowerCase() === 'null' ||
-                              !physCol || physCol === 'NaN' || String(physCol).toLowerCase() === 'null';
-
-      if (isPhysValInvalid) {
-        if (presTable && presTable !== 'NaN') {
-          if (!nodesDict[presTable]) {
-            nodesDict[presTable] = { type: 'Presentation Table', columns: new Set() };
-          }
-          if (presCol && presCol !== 'NaN') {
-            nodesDict[presTable].columns.add(presCol);
-          }
-        }
-        return;
-      }
-      
-      mappings.push({
-        presentationTable: presTable,
-        presentationColumn: presCol,
-        physicalTable: physTable,
-        physicalColumn: physCol
-      });
-      
-      if (!nodesDict[physTable]) {
-        nodesDict[physTable] = { type: 'Physical Table', columns: new Set() };
-      }
-      nodesDict[physTable].columns.add(physCol);
-      
-      if (!nodesDict[presTable]) {
-        nodesDict[presTable] = { type: 'Presentation Table', columns: new Set() };
-      }
-      nodesDict[presTable].columns.add(presCol);
-      
-      connectionsSet.add(`${physTable}|||${presTable}`);
-    });
-    
-    const reactNodes = [];
-    let physIdx = 0;
-    let presIdx = 0;
-    
-    Object.keys(nodesDict).sort().forEach(name => {
-      const info = nodesDict[name];
-      const isPhys = info.type === 'Physical Table';
-      
-      const x = isPhys ? 100 : 700;
-      const y = 120 * (isPhys ? physIdx++ : presIdx++);
-      
-      reactNodes.push({
-        id: name,
-        type: 'tableNode',
-        position: { x, y },
-        data: {
-          label: name,
-          type: info.type,
-          columns: Array.from(info.columns).sort(),
-          isExtensible: false
-        }
-      });
-    });
-    
-    const reactEdges = [];
-    let edgeIdx = 1;
-    connectionsSet.forEach(conn => {
-      const [source, target] = conn.split('|||');
-      reactEdges.push({
-        id: `e-${edgeIdx++}`,
-        source,
-        target,
-        animated: true,
-        style: { stroke: 'rgba(255, 255, 255, 0.15)', strokeWidth: 2 }
-      });
-    });
-    
-    const responseData = {
-      subjectArea: saInfo.name,
-      pillar: saInfo.pillars[0],
-      pillars: saInfo.pillars,
-      nodes: reactNodes,
-      edges: reactEdges,
-      mappings: mappings
-    };
-    fdiLineageDataCache[cacheKey] = responseData;
-    res.json(responseData);
-    
+    // Fallback: If not pre-baked (should not happen), return 404
+    return res.status(404).json({ error: `Subject Area lineage not found for ${slug}` });
   } catch (err) {
-    console.error('Error compiling lineage data:', err);
-    res.status(500).json({ error: 'Database compilation failed' });
+    console.error('Error loading FDI lineage:', err.message);
+    res.status(500).json({ error: 'Failed to load lineage data' });
   }
 });
 
@@ -378,125 +273,37 @@ app.get('/api/otbi/subject-areas', async (req, res) => {
 });
 
 // ── ROUTE 8: GET /api/otbi/lineage/:slug ─────────────────────────────────────
-// Each OTBI SA lineage is read ONCE then cached — subsequent = 0 reads
+// 100% static file read — ZERO database reads
 app.get('/api/otbi/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
     const cacheKey = slug.toLowerCase();
+
+    // Check in-memory cache first
     if (otbiLineageDataCache[cacheKey]) {
       return res.json(otbiLineageDataCache[cacheKey]);
     }
 
-    let mappings = [];
-    let targetTable = null;
-    let targetSAName = null;
-    
-    const sas = cachedOtbiSubjectAreas || await loadOtbiSubjectAreas();
-    const match = sas.find(x => x.slug === slug);
-    if (match) {
-      targetTable = match.sourceTable;
-      targetSAName = match.name;
+    // Load from pre-baked static file
+    const filePath = path.join(__dirname, 'static_lineage', 'otbi', `${cacheKey}.json`);
+    if (fs.existsSync(filePath)) {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      otbiLineageDataCache[cacheKey] = data;
+      return res.json(data);
     }
-    
-    if (targetTable && targetSAName) {
-      const result = await db.execute({
-        sql: `SELECT presentation_table, presentation_column, physical_table, physical_column 
-              FROM ${targetTable} 
-              WHERE subject_area = ?`,
-        args: [targetSAName]
-      });
-      
-      mappings = result.rows.map(r => {
-        let pvoRaw = r.physical_table || '';
-        let pvoName = pvoRaw.split('.').pop() || '';
-        if (pvoName && !pvoName.endsWith('PVO') && pvoRaw.toLowerCase().includes('publicview')) {
-          pvoName = pvoName + 'PVO';
-        }
-        
-        return {
-          presentationTable: r.presentation_table,
-          presentationColumn: r.presentation_column,
-          pvoName: pvoName || 'UnknownPVO',
-          pvoAttribute: r.physical_column || 'UnknownAttribute'
-        };
-      });
-    }
-    
-    const nodesDict = {};
-    const connectionsSet = new Set();
-    
-    mappings.forEach(m => {
-      const presTable = m.presentationTable;
-      const presCol = m.presentationColumn;
-      const pvo = m.pvoName;
-      const pvoAttr = m.pvoAttribute;
-      
-      if (!nodesDict[pvo]) {
-        nodesDict[pvo] = { type: 'Physical Table', columns: new Set() };
-      }
-      nodesDict[pvo].columns.add(pvoAttr);
-      
-      if (!nodesDict[presTable]) {
-        nodesDict[presTable] = { type: 'Presentation Table', columns: new Set() };
-      }
-      nodesDict[presTable].columns.add(presCol);
-      
-      connectionsSet.add(`${pvo}|||${presTable}`);
-    });
-    
-    const reactNodes = [];
-    let pvoIdx = 0;
-    let presIdx = 0;
-    
-    Object.keys(nodesDict).sort().forEach(name => {
-      const info = nodesDict[name];
-      const isPvo = info.type === 'Physical Table';
-      const x = isPvo ? 450 : 0;
-      const y = 120 * (isPvo ? pvoIdx++ : presIdx++);
-      
-      reactNodes.push({
-        id: name,
-        type: 'tableNode',
-        position: { x, y },
-        data: {
-          label: name,
-          type: info.type,
-          columns: Array.from(info.columns).sort(),
-          isExtensible: false
-        }
-      });
-    });
-    
-    const reactEdges = [];
-    let edgeIdx = 1;
-    connectionsSet.forEach(conn => {
-      const [source, target] = conn.split('|||');
-      reactEdges.push({
-        id: `otbi-e-${edgeIdx++}`,
-        source: target,
-        target: source,
-        animated: true,
-        style: { stroke: '#F97316', strokeWidth: 2, opacity: 0.8 },
-        markerEnd: { type: 'arrowclosed', color: '#F97316' }
-      });
-    });
-    
-    const responseData = {
-      nodes: reactNodes,
-      edges: reactEdges,
-      mappings: mappings
-    };
-    otbiLineageDataCache[cacheKey] = responseData;
-    res.json(responseData);
+
+    // Fallback
+    return res.status(404).json({ error: `OTBI Subject Area lineage not found for ${slug}` });
   } catch (err) {
-    console.error('Error fetching OTBI lineage:', err.message);
-    res.status(500).json({ error: 'Failed to fetch OTBI lineage data' });
+    console.error('Error loading OTBI lineage:', err.message);
+    res.status(500).json({ error: 'Failed to load OTBI lineage data' });
   }
 });
 
 // ── ROUTE 9: POST /api/ai/match-fdi ─────────────────────────────────────────
-// Optimized: Uses UNION ALL across all 4 tables in ONE query instead of 4 sequential loops
-// Composite indexes on (physical_table, physical_column) make exact match near-instant
+// 100% in-memory: uses staticSearchEntries from search_index.json — ZERO DB reads
+// staticSearchEntries format: { p, sa, ss, pt, pc, xt, xc }
+//   xt = physical_table (PVO name in FDI), xc = physical_column (PVO attribute)
 app.post('/api/ai/match-fdi', async (req, res) => {
   try {
     const { otbiColumn, otbiTable, pvoName, pvoAttribute } = req.body;
@@ -508,106 +315,72 @@ app.post('/api/ai/match-fdi', async (req, res) => {
     if (serverMatchCache[cacheKey]) {
       return res.json(serverMatchCache[cacheKey]);
     }
-    
-    const pvoClean = pvoName.replace(/PVO$/i, '');
-    
-    // ── EXACT MATCH: Single UNION ALL query across all 4 pillars (1 round trip vs 4)
-    // Uses composite index on (physical_table, physical_column) — nearly instant
-    const exactRes = await db.execute({
-      sql: `SELECT DISTINCT 'ERP' as pillar, subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM erp_semantic_model_lineage
-            WHERE physical_column = ? AND (physical_table LIKE ? OR physical_table = ?)
-            UNION ALL
-            SELECT DISTINCT 'HCM', subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM hcm_semantic_model_lineage
-            WHERE physical_column = ? AND (physical_table LIKE ? OR physical_table = ?)
-            UNION ALL
-            SELECT DISTINCT 'SCM', subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM scm_semantic_model_lineage
-            WHERE physical_column = ? AND (physical_table LIKE ? OR physical_table = ?)
-            UNION ALL
-            SELECT DISTINCT 'CX', subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM cx_semantic_model_lineage
-            WHERE physical_column = ? AND (physical_table LIKE ? OR physical_table = ?)
-            LIMIT 30`,
-      args: [
-        pvoAttribute, `%${pvoClean}%`, pvoName,
-        pvoAttribute, `%${pvoClean}%`, pvoName,
-        pvoAttribute, `%${pvoClean}%`, pvoName,
-        pvoAttribute, `%${pvoClean}%`, pvoName
-      ]
-    });
 
-    const exactMatches = exactRes.rows.map(r => ({
-      subjectArea: r.subject_area,
-      presentationTable: r.presentation_table,
-      presentationColumn: r.presentation_column,
-      physicalTable: r.physical_table,
-      physicalColumn: r.physical_column
-    }));
+    const pvoClean = pvoName.replace(/PVO$/i, '').toLowerCase();
+    const pvoAttrLower = (pvoAttribute || '').toLowerCase();
+    const otbiColLower = (otbiColumn || '').toLowerCase();
 
-    // ── CANDIDATES for Grok: Single UNION ALL for exact physical_column match (1 round trip)
-    // Uses single-column index on physical_column — index scan only
-    let candidatesRes = await db.execute({
-      sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM erp_semantic_model_lineage WHERE physical_column = ? LIMIT 10
-            UNION ALL
-            SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM hcm_semantic_model_lineage WHERE physical_column = ? LIMIT 10
-            UNION ALL
-            SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM scm_semantic_model_lineage WHERE physical_column = ? LIMIT 10
-            UNION ALL
-            SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-            FROM cx_semantic_model_lineage WHERE physical_column = ? LIMIT 10`,
-      args: [pvoAttribute, pvoAttribute, pvoAttribute, pvoAttribute]
-    });
+    // ── EXACT MATCHES: physical_column = pvoAttribute AND physical_table contains pvoClean
+    // Pure in-memory filter over 133K entries — ZERO DB reads
+    const exactSet = new Set();
+    const exactMatches = staticSearchEntries
+      .filter(e => {
+        const colMatch = (e.xc || '').toLowerCase() === pvoAttrLower;
+        const tableMatch = (e.xt || '').toLowerCase().includes(pvoClean) || (e.xt || '') === pvoName;
+        return colMatch && tableMatch;
+      })
+      .filter(e => {
+        const k = `${e.sa}|${e.pt}|${e.pc}`;
+        if (exactSet.has(k)) return false;
+        exactSet.add(k);
+        return true;
+      })
+      .slice(0, 30)
+      .map(e => ({
+        subjectArea: e.sa,
+        presentationTable: e.pt,
+        presentationColumn: e.pc,
+        physicalTable: e.xt,
+        physicalColumn: e.xc
+      }));
 
-    let candidatesRows = [...candidatesRes.rows];
-
-    // Fallback: if not enough candidates, try physical_table match (still index-supported)
-    if (candidatesRows.length < 8) {
-      const fbRes = await db.execute({
-        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM erp_semantic_model_lineage WHERE physical_table = ? LIMIT 8
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM hcm_semantic_model_lineage WHERE physical_table = ? LIMIT 8
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM scm_semantic_model_lineage WHERE physical_table = ? LIMIT 8
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM cx_semantic_model_lineage WHERE physical_table = ? LIMIT 8`,
-        args: [pvoName, pvoName, pvoName, pvoName]
-      });
-      candidatesRows = [...candidatesRows, ...fbRes.rows];
-    }
-
-    // Last fallback: presentation_column prefix match for the OTBI column name
-    if (candidatesRows.length < 5) {
-      const prefix = `${otbiColumn}%`;
-      const fbRes2 = await db.execute({
-        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM erp_semantic_model_lineage WHERE presentation_column LIKE ? LIMIT 6
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM hcm_semantic_model_lineage WHERE presentation_column LIKE ? LIMIT 6
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM scm_semantic_model_lineage WHERE presentation_column LIKE ? LIMIT 6
-              UNION ALL
-              SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM cx_semantic_model_lineage WHERE presentation_column LIKE ? LIMIT 6`,
-        args: [prefix, prefix, prefix, prefix]
-      });
-      candidatesRows = [...candidatesRows, ...fbRes2.rows];
-    }
-
-    // Deduplicate candidates
+    // ── CANDIDATES for Grok: broader match by physical_column, then by physical_table, then by pres col prefix
     const seen = new Set();
-    candidatesRows = candidatesRows.filter(r => {
-      const k = `${r.subject_area}|${r.presentation_table}|${r.presentation_column}`;
+    let candidatesRows = [];
+
+    // Layer 1: exact physical_column match (most reliable)
+    const byPhysCol = staticSearchEntries
+      .filter(e => (e.xc || '').toLowerCase() === pvoAttrLower)
+      .slice(0, 40);
+    candidatesRows = [...byPhysCol];
+
+    // Layer 2: physical_table contains pvoClean (different column, same PVO)
+    if (candidatesRows.length < 15) {
+      const byPhysTable = staticSearchEntries
+        .filter(e => (e.xt || '').toLowerCase().includes(pvoClean) || (e.xt || '') === pvoName)
+        .slice(0, 30);
+      candidatesRows = [...candidatesRows, ...byPhysTable];
+    }
+
+    // Layer 3: presentation_column starts with OTBI column name (prefix — uses index logic)
+    if (candidatesRows.length < 10) {
+      const byPresCol = staticSearchEntries
+        .filter(e => (e.pc || '').toLowerCase().startsWith(otbiColLower))
+        .slice(0, 20);
+      candidatesRows = [...candidatesRows, ...byPresCol];
+    }
+
+    // Layer 4: presentation_column contains OTBI column name (fuzzy)
+    if (candidatesRows.length < 8) {
+      const byPresColFuzzy = staticSearchEntries
+        .filter(e => (e.pc || '').toLowerCase().includes(otbiColLower) && otbiColLower.length >= 4)
+        .slice(0, 15);
+      candidatesRows = [...candidatesRows, ...byPresColFuzzy];
+    }
+
+    // Deduplicate and limit
+    candidatesRows = candidatesRows.filter(e => {
+      const k = `${e.sa}|${e.pt}|${e.pc}`;
       if (seen.has(k)) return false;
       seen.add(k);
       return true;
@@ -621,21 +394,21 @@ app.post('/api/ai/match-fdi', async (req, res) => {
 - Source PVO: "${pvoName}"
 - PVO Attribute: "${pvoAttribute}"
 
-Candidate FDI Columns found in database:
-${candidatesRows.map((c, i) => `${i+1}. Subject Area: "${c.subject_area}", Table: "${c.presentation_table}", Column: "${c.presentation_column}" (Physical Table: "${c.physical_table}", Column: "${c.physical_column}")`).join('\n')}
+Candidate FDI Columns (from in-memory search index):
+${candidatesRows.map((c, i) => `${i+1}. Subject Area: "${c.sa}", Table: "${c.pt}", Column: "${c.pc}" (Physical Table: "${c.xt}", Column: "${c.xc}")`).join('\n')}
 
 Task:
 Analyze the candidates and select/rank the top 3 most likely matching FDI columns.
 You MUST output a valid JSON array containing exactly 3 objects (or fewer if there are not enough candidates).
 Each object in the array must contain these exact keys:
 - "rank": string (e.g., "1st", "2nd", "3rd")
-- "subjectArea": string (Verbatim full FDI Subject Area name from the candidates list, e.g., "Financials - AP Invoices". DO NOT shorten, generalize, or summarize this name under any circumstances!)
+- "subjectArea": string (Verbatim full FDI Subject Area name from the candidates list. DO NOT shorten or generalize!)
 - "presentationTable": string (Verbatim FDI Presentation Table name from candidates list)
 - "presentationColumn": string (Verbatim FDI Presentation Column name from candidates list)
 - "score": string (Confidence percentage, e.g., "95%")
 - "explanation": string (Brief explanation of why it matches)
 
-You MUST use the exact, verbatim values for "subjectArea", "presentationTable", and "presentationColumn" as they appear in the candidate list.
+You MUST use the exact, verbatim values as they appear in the candidate list.
 Do not include any conversational filler, markdown formatting (like \`\`\`json ... \`\`\`) or text outside the JSON array. Output only the raw valid JSON.`;
     
     const aiResult = await callGrok(systemPrompt, userPrompt);
@@ -695,21 +468,19 @@ app.post('/api/ai/pvo-finder', async (req, res) => {
       else if (otbiPvoListCache[otbiSubjectArea]) {
         relatedPvos = otbiPvoListCache[otbiSubjectArea];
       }
-      // Option 3: DB fallback — use composite index (subject_area, physical_table)
+      // Option 3: static file fallback — ZERO database reads
       else {
-        const table = match.sourceTable;
+        const filePath = path.join(__dirname, 'static_lineage', 'otbi', `${cacheSlug}.json`);
         try {
-          const pvoRes = await db.execute({
-            sql: `SELECT DISTINCT physical_table 
-                  FROM ${table} 
-                  WHERE subject_area = ? AND physical_table IS NOT NULL AND physical_table != 'NaN' AND physical_table != ''
-                  LIMIT 100`,
-            args: [match.name]
-          });
-          relatedPvos = pvoRes.rows.map(r => r.physical_table);
-          otbiPvoListCache[otbiSubjectArea] = relatedPvos;
+          if (fs.existsSync(filePath)) {
+            const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            const cachedMappings = data.mappings || [];
+            const pvoSet = new Set(cachedMappings.map(m => m.pvoName).filter(p => p && p !== 'UnknownPVO'));
+            relatedPvos = Array.from(pvoSet);
+            otbiPvoListCache[otbiSubjectArea] = relatedPvos;
+          }
         } catch (err) {
-          console.error('Error fetching PVOs for PVO finder:', err.message);
+          console.error('Error reading PVOs from static OTBI file:', err.message);
         }
       }
     }
