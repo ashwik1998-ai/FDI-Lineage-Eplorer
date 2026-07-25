@@ -133,6 +133,7 @@ export default function App() {
   const [sidebarSearch,   setSidebarSearch]   = useState('');
 
   // OTBI workspace selections
+  const [selectedOtbiArea,  setSelectedOtbiArea]  = useState('all'); // 'all' | 'finance' | 'hcm' | 'scm' | 'cx' | 'project'
   const [selectedOtbiSA,    setSelectedOtbiSA]    = useState('');
   const [selectedOtbiTable, setSelectedOtbiTable] = useState(null);
   const [otbiSidebarSearch, setOtbiSidebarSearch] = useState('');
@@ -156,7 +157,8 @@ export default function App() {
   const [drawerTab,      setDrawerTab]       = useState('mappings'); // 'mappings' | 'explain'
 
   // OTBI AI Match states
-  const [aiMatchedFdi,       setAiMatchedFdi]       = useState('');
+  const [aiMatchedFdi,       setAiMatchedFdi]       = useState([]); // Structured array
+  const [aiMatchedFdiError,  setAiMatchedFdiError]  = useState('');
   const [exactMatchedFdi,    setExactMatchedFdi]    = useState([]);
   const [aiMatchedFdiLoading, setAiMatchedFdiLoading] = useState(false);
   const [otbiDrawerTab,      setOtbiDrawerTab]      = useState('mappings'); // 'mappings' | 'grok'
@@ -313,6 +315,19 @@ export default function App() {
   const filteredSAs = useMemo(() =>
     subjectAreas.filter(sa => selectedPillar === 'all' || sa.pillar === selectedPillar || (sa.pillars || []).includes(selectedPillar)),
     [subjectAreas, selectedPillar]);
+
+  const filteredOtbiSAs = useMemo(() => {
+    if (selectedOtbiArea === 'all') return otbiSubjectAreas;
+    return otbiSubjectAreas.filter(sa => {
+      const table = sa.sourceTable;
+      if (selectedOtbiArea === 'finance' && table === '"OTBI-Finance"') return true;
+      if (selectedOtbiArea === 'hcm' && table === '"OTBI-HCM"') return true;
+      if (selectedOtbiArea === 'scm' && table === '"OTBI-SCM"') return true;
+      if (selectedOtbiArea === 'cx' && table === '"OTBI-CX"') return true;
+      if (selectedOtbiArea === 'project' && table === '"OTBI-Project"') return true;
+      return false;
+    });
+  }, [otbiSubjectAreas, selectedOtbiArea]);
 
   // ── Presentation folders from loaded nodes ────────────────────────────────────
   const presFolders = useMemo(() =>
@@ -471,7 +486,8 @@ export default function App() {
       if (isDeselect) {
         setMetricDetails(null);
         setAiExplanation('');
-        setAiMatchedFdi('');
+        setAiMatchedFdi([]);
+        setAiMatchedFdiError('');
         setExactMatchedFdi([]);
         return null;
       }
@@ -489,12 +505,14 @@ export default function App() {
               physicalColumn: m.pvoAttribute
             }))
           });
-          setAiMatchedFdi('');
+          setAiMatchedFdi([]);
+          setAiMatchedFdiError('');
           setExactMatchedFdi([]);
           setOtbiDrawerTab('mappings');
         } else {
           setMetricDetails(null);
-          setAiMatchedFdi('');
+          setAiMatchedFdi([]);
+          setAiMatchedFdiError('');
           setExactMatchedFdi([]);
         }
       } else {
@@ -572,6 +590,28 @@ export default function App() {
     if (matched.length) setSelectedSA(matched[0].slug);
   };
 
+  const handleOtbiAreaChange = (e) => {
+    const area = e.target.value;
+    setSelectedOtbiArea(area);
+    const matched = otbiSubjectAreas.filter(sa => {
+      if (area === 'all') return true;
+      const table = sa.sourceTable;
+      if (area === 'finance' && table === '"OTBI-Finance"') return true;
+      if (area === 'hcm' && table === '"OTBI-HCM"') return true;
+      if (area === 'scm' && table === '"OTBI-SCM"') return true;
+      if (area === 'cx' && table === '"OTBI-CX"') return true;
+      if (area === 'project' && table === '"OTBI-Project"') return true;
+      return false;
+    });
+    if (matched.length) {
+      setSelectedOtbiSA(matched[0].slug);
+      setSelectedOtbiTable(null);
+    } else {
+      setSelectedOtbiSA('');
+      setSelectedOtbiTable(null);
+    }
+  };
+
   const currentSAName = subjectAreas.find(x => x.slug === selectedSA)?.name || '';
 
   // ── AI Fetchers ─────────────────────────────────────────────────────────────
@@ -599,14 +639,16 @@ export default function App() {
   }, [metricDetails, aiExplanation, aiExplainLoading, currentSAName]);
 
   const fetchAiFdiMatches = useCallback(async () => {
-    if (!metricDetails || aiMatchedFdi || aiMatchedFdiLoading) return;
+    if (!metricDetails || (Array.isArray(aiMatchedFdi) && aiMatchedFdi.length > 0) || aiMatchedFdiLoading) return;
     setAiMatchedFdiLoading(true);
+    setAiMatchedFdiError('');
     try {
       const activeMapping = mappings.find(
         m => m.presentationTable === metricDetails.tableName && m.presentationColumn === metricDetails.name
       );
       if (!activeMapping) {
-        setAiMatchedFdi("No direct mapping found to query candidates.");
+        setAiMatchedFdi([]);
+        setAiMatchedFdiError("No direct mapping found to query candidates.");
         return;
       }
 
@@ -622,9 +664,16 @@ export default function App() {
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
       setExactMatchedFdi(res.exactMatches || []);
-      setAiMatchedFdi(res.matches);
+      
+      if (Array.isArray(res.matches)) {
+        setAiMatchedFdi(res.matches);
+      } else {
+        setAiMatchedFdi([]);
+        setAiMatchedFdiError(typeof res.matches === 'string' ? res.matches : "Failed to load valid recommendations.");
+      }
     } catch (e) {
-      setAiMatchedFdi(`Failed to load AI matches: ${e.message}`);
+      setAiMatchedFdi([]);
+      setAiMatchedFdiError(`Failed to load AI matches: ${e.message}`);
     } finally {
       setAiMatchedFdiLoading(false);
     }
@@ -632,10 +681,10 @@ export default function App() {
 
   // Auto-fetch FDI matches when column changes in OTBI bridge workspace
   useEffect(() => {
-    if (workspace === 'otbi' && metricDetails && !aiMatchedFdi && !aiMatchedFdiLoading) {
+    if (workspace === 'otbi' && metricDetails && aiMatchedFdi.length === 0 && !aiMatchedFdiLoading && !aiMatchedFdiError) {
       fetchAiFdiMatches();
     }
-  }, [workspace, metricDetails, aiMatchedFdi, aiMatchedFdiLoading, fetchAiFdiMatches]);
+  }, [workspace, metricDetails, aiMatchedFdi, aiMatchedFdiLoading, aiMatchedFdiError, fetchAiFdiMatches]);
 
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -701,16 +750,29 @@ export default function App() {
 
         <div className="topbar-selectors">
           {workspace === 'otbi' ? (
-            <div className="selector-group">
-              <span className="selector-label">OTBI Subject Area</span>
-              <select className="selector-select" style={{ minWidth: 320 }}
-                value={selectedOtbiSA}
-                onChange={e => { setSelectedOtbiSA(e.target.value); setSelectedOtbiTable(null); }}>
-                {otbiSubjectAreas.map(sa => (
-                  <option key={sa.slug} value={sa.slug}>{sa.name}</option>
-                ))}
-              </select>
-            </div>
+            <>
+              <div className="selector-group">
+                <span className="selector-label">OTBI Area</span>
+                <select className="selector-select" value={selectedOtbiArea} onChange={handleOtbiAreaChange}>
+                  <option value="all">All Areas</option>
+                  <option value="finance">Finance</option>
+                  <option value="hcm">Workforce (HCM)</option>
+                  <option value="scm">Procurement (SCM)</option>
+                  <option value="cx">Sales (CX)</option>
+                  <option value="project">Projects</option>
+                </select>
+              </div>
+              <div className="selector-group">
+                <span className="selector-label">OTBI Subject Area</span>
+                <select className="selector-select" style={{ minWidth: 250 }}
+                  value={selectedOtbiSA}
+                  onChange={e => { setSelectedOtbiSA(e.target.value); setSelectedOtbiTable(null); }}>
+                  {filteredOtbiSAs.map(sa => (
+                    <option key={sa.slug} value={sa.slug}>{sa.name}</option>
+                  ))}
+                </select>
+              </div>
+            </>
           ) : (
             <>
               <div className="selector-group">
@@ -1107,14 +1169,96 @@ export default function App() {
                             <span style={{ fontSize: '24px', animation: 'spin 0.8s linear infinite', color: 'var(--primary)' }}>⟳</span>
                             <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking Grok to match FDI columns...</span>
                           </div>
+                        ) : aiMatchedFdiError ? (
+                          <div style={{ color: '#EF4444', fontSize: '12px', padding: '8px', background: 'rgba(239,68,68,0.1)', borderRadius: '6px', border: '1px solid rgba(239,68,68,0.2)' }}>
+                            {aiMatchedFdiError}
+                          </div>
+                        ) : Array.isArray(aiMatchedFdi) && aiMatchedFdi.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', flex: 1, paddingRight: 4 }}>
+                            {aiMatchedFdi.map((match, i) => (
+                              <div key={i} style={{
+                                padding: '12px',
+                                border: '1px solid var(--border)',
+                                borderRadius: 'var(--r-md)',
+                                background: 'linear-gradient(135deg, rgba(249,115,22,0.05), rgba(99,102,241,0.02))',
+                                boxShadow: 'var(--sh-xs)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px'
+                              }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <span style={{
+                                    fontSize: '10px',
+                                    fontWeight: 'bold',
+                                    color: '#fff',
+                                    background: 'var(--primary)',
+                                    padding: '2px 8px',
+                                    borderRadius: '10px',
+                                    textTransform: 'uppercase'
+                                  }}>
+                                    {match.rank || `${i+1}st`} Match
+                                  </span>
+                                  <span style={{
+                                    fontSize: '11px',
+                                    fontWeight: 'bold',
+                                    color: 'var(--primary)',
+                                    background: 'rgba(249,115,22,0.1)',
+                                    padding: '2px 8px',
+                                    borderRadius: '10px'
+                                  }}>
+                                    Score: {match.score || 'N/A'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: 2 }}>
+                                    🌐 FDI Subject Area
+                                  </div>
+                                  <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-h)' }}>
+                                    {match.subjectArea}
+                                  </div>
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '8px', borderTop: '1px dashed var(--border)', paddingTop: '6px' }}>
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: 2 }}>
+                                      🗄️ FDI Presentation Table
+                                    </div>
+                                    <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-body)', fontFamily: 'var(--font-mono)' }}>
+                                      {match.presentationTable}
+                                    </div>
+                                  </div>
+                                  <div style={{ width: '1px', background: 'var(--border)' }} />
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: 2 }}>
+                                      ◆ FDI Column
+                                    </div>
+                                    <div style={{ fontSize: '11px', fontWeight: '700', color: 'var(--in-700)', fontFamily: 'var(--font-mono)' }}>
+                                      {match.presentationColumn}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {match.explanation && (
+                                  <div style={{
+                                    fontSize: '11.5px',
+                                    color: 'var(--text-muted)',
+                                    background: 'rgba(0,0,0,0.15)',
+                                    padding: '8px',
+                                    borderRadius: '6px',
+                                    borderLeft: '3px solid var(--primary)',
+                                    lineHeight: '1.4',
+                                    marginTop: '4px'
+                                  }}>
+                                    {match.explanation}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         ) : (
-                          <div style={{
-                            flex: 1, overflowY: 'auto', padding: '16px', borderRadius: 'var(--r-md)',
-                            background: 'linear-gradient(135deg, rgba(249,115,22,0.04), rgba(99,102,241,0.02))',
-                            border: '1px solid var(--primary-border)', lineHeight: '1.6', fontSize: '13px',
-                            color: 'var(--text-body)', whiteSpace: 'pre-wrap'
-                          }}>
-                            {aiMatchedFdi || "No recommendations returned."}
+                          <div style={{ color: 'var(--text-faint)', fontSize: '12px', fontStyle: 'italic', padding: 8 }}>
+                            No recommendations found or returned.
                           </div>
                         )}
                       </div>

@@ -544,7 +544,7 @@ app.post('/api/ai/match-fdi', async (req, res) => {
     }
     
     // 3. Ask Grok to explain semantic suggestions
-    const systemPrompt = "You are a senior data architect specializing in Oracle BI (OTBI) and Fusion Data Intelligence (FDI) schemas. Your task is to match an OTBI presentation column to the most likely FDI database warehouse columns.";
+    const systemPrompt = "You are a senior data architect specializing in Oracle BI (OTBI) and Fusion Data Intelligence (FDI) schemas. Your task is to match an OTBI presentation column to the most likely FDI database warehouse columns. You must respond ONLY with a valid JSON array of objects representing the top 3 matches.";
     const userPrompt = `Target OTBI Column to Match:
 - OTBI Presentation Table: "${otbiTable}"
 - OTBI Column Name: "${otbiColumn}"
@@ -556,18 +556,33 @@ ${candidatesRows.map((c, i) => `${i+1}. Subject Area: "${c.subject_area}", Table
 
 Task:
 Analyze the candidates and select/rank the top 3 most likely matching FDI columns.
-For each of the top 3 matches, output:
-1. Rank (1st, 2nd, 3rd)
-2. FDI Column Identifier: "Subject Area › Table › Column"
-3. Match Confidence Score (percentage, e.g. 95%)
-4. Brief Explanation of the match reason.
+You MUST output a valid JSON array containing exactly 3 objects (or fewer if there are not enough candidates).
+Each object in the array must contain these exact keys:
+- "rank": string (e.g., "1st", "2nd", "3rd")
+- "subjectArea": string (FDI Subject Area name)
+- "presentationTable": string (FDI Presentation Table name)
+- "presentationColumn": string (FDI Presentation Column name)
+- "score": string (Confidence percentage, e.g., "95%")
+- "explanation": string (Brief explanation of why it matches)
 
-Keep the output concise, structured, and in clean, readable text format. If no candidates match, suggest what the theoretical FDI mapping should be.`;
+Do not include any conversational filler, markdown formatting (like \`\`\`json ... \`\`\`) or text outside the JSON array. Output only the raw valid JSON.`;
     
     const aiResult = await callGrok(systemPrompt, userPrompt);
+    let parsedMatches = [];
+    try {
+      let cleanJson = aiResult.trim();
+      if (cleanJson.startsWith('```')) {
+        cleanJson = cleanJson.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim();
+      }
+      parsedMatches = JSON.parse(cleanJson);
+    } catch (parseErr) {
+      console.error('Failed to parse AI matches as JSON:', parseErr.message);
+      // Fallback: parse markdown list if JSON fails (rare for llama-3.3-70b)
+    }
+    
     res.json({
       exactMatches,
-      matches: aiResult
+      matches: parsedMatches
     });
   } catch (err) {
     console.error('AI match error:', err.message);
