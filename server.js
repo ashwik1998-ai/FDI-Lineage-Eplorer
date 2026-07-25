@@ -55,22 +55,35 @@ try {
   console.error('Failed to load static subject areas metadata:', err.message);
 }
 
-// In-memory search index built once on startup — prevents all search DB reads
-// Structure: { term: [{ pillar, subjectArea, subjectAreaSlug, presTable, presColumn }] }
-const searchIndex = new Map();
+// ── STATIC SEARCH INDEX ─────────────────────────────────────────────────────
+// Loaded from search_index.json (pre-baked locally, zero DB reads on server start)
+// Format: [{ p, sa, ss, pt, pc, xt, xc }, ...] (see generate_search_index.js)
+let staticSearchEntries = [];
+const searchIndexMap = new Map(); // term -> [entry]
 
-// Build search index from a set of columns
-function addToSearchIndex(entry) {
-  // Index by words in presentation column name and presentation table name
-  const terms = [
-    ...(entry.presColumn || '').toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length >= 2),
-    ...(entry.presTable || '').toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length >= 2)
-  ];
-  for (const term of terms) {
-    if (!searchIndex.has(term)) searchIndex.set(term, []);
-    const arr = searchIndex.get(term);
-    // Cap per-term entries to 200 to avoid huge memory
-    if (arr.length < 200) arr.push(entry);
+function loadSearchIndex() {
+  const idxPath = path.join(__dirname, 'search_index.json');
+  if (!fs.existsSync(idxPath)) {
+    console.warn('WARNING: search_index.json not found. Search will return no results. Run generate_search_index.js to create it.');
+    return;
+  }
+  try {
+    staticSearchEntries = JSON.parse(fs.readFileSync(idxPath, 'utf8'));
+    // Build term → entry map
+    for (const entry of staticSearchEntries) {
+      const terms = [
+        ...(entry.pc || '').toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length >= 2),
+        ...(entry.pt || '').toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length >= 2)
+      ];
+      for (const term of terms) {
+        if (!searchIndexMap.has(term)) searchIndexMap.set(term, []);
+        const arr = searchIndexMap.get(term);
+        if (arr.length < 200) arr.push(entry);
+      }
+    }
+    console.log(`Loaded search index: ${staticSearchEntries.length} entries, ${searchIndexMap.size} unique terms.`);
+  } catch (err) {
+    console.error('Failed to load search_index.json:', err.message);
   }
 }
 
@@ -85,40 +98,8 @@ async function loadOtbiSubjectAreas() {
   return staticMetadata.otbi;
 }
 
-// Build search index by scanning FDI lineage tables ONCE on startup
-async function buildSearchIndex() {
-  if (searchIndex.size > 0) return; // already built
-  console.log('Building in-memory search index from FDI tables...');
-  const pillars = ['erp', 'hcm', 'scm', 'cx'];
-  let total = 0;
-  for (const p of pillars) {
-    try {
-      // SELECT only unique (presTable, presColumn) combinations — no full scan needed
-      const r = await db.execute({
-        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM ${p}_semantic_model_lineage`,
-        args: []
-      });
-      for (const row of r.rows) {
-        addToSearchIndex({
-          pillar: p.toUpperCase(),
-          subjectArea: row.subject_area,
-          subjectAreaSlug: slugify(row.subject_area || ''),
-          presTable: row.presentation_table,
-          presColumn: row.presentation_column,
-          physTable: row.physical_table,
-          physColumn: row.physical_column
-        });
-        total++;
-      }
-    } catch (err) {
-      console.error(`Search index build error for ${p}:`, err.message);
-    }
-  }
-  console.log(`Search index built: ${total} entries indexed across ${searchIndex.size} unique terms.`);
-}
 
-// Search function: use in-memory index, zero DB reads
+// Search function using in-memory index — ZERO database reads
 function searchInMemory(query) {
   const q = query.toLowerCase().trim();
   if (q.length < 2) return [];
@@ -126,13 +107,13 @@ function searchInMemory(query) {
   const terms = q.split(/[^a-z0-9]+/).filter(t => t.length >= 2);
   if (!terms.length) return [];
 
-  // Score each candidate
+  // Score each candidate entry
   const scoreMap = new Map();
   for (const term of terms) {
-    for (const [key, entries] of searchIndex.entries()) {
+    for (const [key, entries] of searchIndexMap.entries()) {
       if (key.includes(term) || term.includes(key)) {
         for (const e of entries) {
-          const id = `${e.subjectArea}|${e.presTable}|${e.presColumn}`;
+          const id = `${e.sa}|${e.pt}|${e.pc}`;
           scoreMap.set(id, { entry: e, score: (scoreMap.get(id)?.score || 0) + (key === term ? 2 : 1) });
         }
       }
@@ -142,7 +123,15 @@ function searchInMemory(query) {
   return Array.from(scoreMap.values())
     .sort((a, b) => b.score - a.score)
     .slice(0, 50)
-    .map(x => x.entry);
+    .map(x => ({
+      pillar: x.entry.p,
+      subjectArea: x.entry.sa,
+      subjectAreaSlug: x.entry.ss,
+      presTable: x.entry.pt,
+      presColumn: x.entry.pc,
+      physTable: x.entry.xt,
+      physColumn: x.entry.xc
+    }));
 }
 
 // ── ROUTE 1: GET /api/subject-areas ──────────────────────────────────────────
@@ -687,21 +676,34 @@ app.post('/api/ai/pvo-finder', async (req, res) => {
       return res.json(pvoFinderCache[cacheKey]);
     }
 
-    // Fetch PVOs for this OTBI subject area — cached per SA name to avoid repeat DB reads
+    // PVO list: check in-memory OTBI lineage cache FIRST (zero DB reads if already loaded)
+    // Then check otbiPvoListCache, then fall back to DB query
     let relatedPvos = [];
-    if (otbiPvoListCache[otbiSubjectArea]) {
-      relatedPvos = otbiPvoListCache[otbiSubjectArea];
-    } else {
-      const sas = cachedOtbiSubjectAreas || await loadOtbiSubjectAreas();
-      const match = sas.find(x => slugify(x.name) === slugify(otbiSubjectArea) || slugify(x.slug) === slugify(otbiSubjectArea));
-      if (match) {
+    const sas = cachedOtbiSubjectAreas || await loadOtbiSubjectAreas();
+    const match = sas.find(x => slugify(x.name) === slugify(otbiSubjectArea) || slugify(x.slug) === slugify(otbiSubjectArea));
+    
+    if (match) {
+      const cacheSlug = match.slug;
+      
+      // Option 1: extract from already-loaded OTBI lineage cache (FREE — 0 reads)
+      if (otbiLineageDataCache[cacheSlug]) {
+        const cachedMappings = otbiLineageDataCache[cacheSlug].mappings || [];
+        const pvoSet = new Set(cachedMappings.map(m => m.pvoName).filter(p => p && p !== 'UnknownPVO'));
+        relatedPvos = Array.from(pvoSet);
+      }
+      // Option 2: check the PVO-specific cache
+      else if (otbiPvoListCache[otbiSubjectArea]) {
+        relatedPvos = otbiPvoListCache[otbiSubjectArea];
+      }
+      // Option 3: DB fallback — use composite index (subject_area, physical_table)
+      else {
         const table = match.sourceTable;
         try {
-          // Use composite index on (subject_area, physical_table) — single fast scan
           const pvoRes = await db.execute({
             sql: `SELECT DISTINCT physical_table 
                   FROM ${table} 
-                  WHERE subject_area = ? AND physical_table IS NOT NULL AND physical_table != 'NaN' AND physical_table != ''`,
+                  WHERE subject_area = ? AND physical_table IS NOT NULL AND physical_table != 'NaN' AND physical_table != ''
+                  LIMIT 100`,
             args: [match.name]
           });
           relatedPvos = pvoRes.rows.map(r => r.physical_table);
@@ -777,16 +779,15 @@ app.listen(PORT, () => {
 });
 
 // ── STARTUP WARMUP ────────────────────────────────────────────────────────────
-// Warms subject area caches and builds the in-memory search index ONCE
+// Loads static files only — ZERO database reads on startup
 (async () => {
   try {
-    console.log('Warming up caches and building search index on startup...');
+    console.log('Loading static metadata and search index...');
     await loadSubjectAreas();
     await loadOtbiSubjectAreas();
-    // Build search index in background — doesn't block startup
-    buildSearchIndex().catch(err => console.error('Search index build failed:', err.message));
-    console.log('Cache warmup complete. Search index building in background...');
+    loadSearchIndex(); // reads from search_index.json — zero DB reads
+    console.log('Startup complete. No database reads performed on startup.');
   } catch (err) {
-    console.error('Error during startup warmup:', err.message);
+    console.error('Error during startup:', err.message);
   }
 })();
