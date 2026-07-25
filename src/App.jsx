@@ -22,6 +22,31 @@ const otbiLineageCache = {};
 const matchCache = {};
 const explanationCache = {};
 
+// ─── Markdown Renderer Helper ────────────────────────────────────────────────
+function renderMarkdown(md) {
+  if (!md) return '';
+  let html = md
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    // Headers
+    .replace(/^### (.*$)/gim, '<h4 style="color:var(--primary);margin-top:18px;margin-bottom:8px;font-weight:700;font-size:13.5px;">$1</h4>')
+    .replace(/^## (.*$)/gim, '<h3 style="color:var(--text-h);margin-top:22px;margin-bottom:10px;font-weight:700;font-size:15px;border-bottom:1px solid var(--border);padding-bottom:4px;width:100%;">$1</h3>')
+    .replace(/^# (.*$)/gim, '<h2 style="color:var(--text-h);margin-top:26px;margin-bottom:12px;font-weight:800;font-size:17px;width:100%;">$1</h2>')
+    // Bold
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--text-h);font-weight:700;">$1</strong>')
+    // Code blocks
+    .replace(/`(.*?)`/g, '<code style="background:rgba(0,0,0,0.2);padding:2px 6px;border-radius:4px;font-family:var(--font-mono);font-size:11.5px;color:var(--primary);">$1</code>')
+    // Lists
+    .replace(/^\s*-\s+(.*$)/gim, '<li style="margin-left:16px;margin-bottom:6px;list-style-type:disc;color:var(--text-body);">$1</li>')
+    .replace(/^\s*\*\s+(.*$)/gim, '<li style="margin-left:16px;margin-bottom:6px;list-style-type:disc;color:var(--text-body);">$1</li>')
+    .replace(/^\s*\d+\.\s+(.*$)/gim, '<li style="margin-left:16px;margin-bottom:6px;list-style-type:decimal;color:var(--text-body);">$1</li>')
+    // Line breaks
+    .replace(/\n/g, '<br/>');
+
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }} dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const getRecent   = () => { try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; } };
 const pushRecent  = (item) => {
@@ -180,6 +205,15 @@ export default function App() {
   const [cmpMappings,   setCmpMappings]   = useState([]);
   const [cmpPresTable,  setCmpPresTable]  = useState(null);
 
+  // PVO Finder states
+  const [pvoOtbiSA,      setPvoOtbiSA]      = useState('');
+  const [pvoFdiSA,       setPvoFdiSA]       = useState('');
+  const [pvoExplanation, setPvoExplanation] = useState('');
+  const [pvoResult,      setPvoResult]      = useState('');
+  const [pvoLoading,     setPvoLoading]     = useState(false);
+  const [pvoError,       setPvoError]       = useState('');
+  const [pvoStepIndex,   setPvoStepIndex]   = useState(0);
+
   // ── Init + URL restore ──────────────────────────────────────────────────────
   useEffect(() => {
     (async () => {
@@ -189,6 +223,13 @@ export default function App() {
 
         const otbiData = await fetch('/api/otbi/subject-areas').then(r => r.json()).catch(() => []);
         setOtbiSubjectAreas(otbiData);
+
+        if (otbiData.length) {
+          setPvoOtbiSA(otbiData[0].name);
+        }
+        if (data.length) {
+          setPvoFdiSA(data[0].name);
+        }
 
         const p = new URLSearchParams(window.location.search);
         const urlSA = p.get('sa'), urlFolder = p.get('folder');
@@ -747,6 +788,40 @@ export default function App() {
     }
   }, [workspace, metricDetails, aiMatchedFdi, aiMatchedFdiLoading, aiMatchedFdiError, fetchAiFdiMatches]);
 
+  const handlePvoFinderSubmit = async (e) => {
+    e.preventDefault();
+    if (!pvoExplanation.trim()) return;
+    
+    setPvoLoading(true);
+    setPvoError('');
+    setPvoResult('');
+    setPvoStepIndex(0);
+
+    const interval = setInterval(() => {
+      setPvoStepIndex(prev => (prev + 1) % 4);
+    }, 1500);
+
+    try {
+      const res = await fetch('/api/ai/pvo-finder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          otbiSubjectArea: pvoOtbiSA,
+          fdiSubjectArea: pvoFdiSA,
+          explanation: pvoExplanation
+        })
+      }).then(r => r.json());
+      
+      if (res.error) throw new Error(res.error);
+      setPvoResult(res.plan || 'No customization plan returned.');
+    } catch (err) {
+      setPvoError(err.message || 'Failed to generate customization plan.');
+    } finally {
+      clearInterval(interval);
+      setPvoLoading(false);
+    }
+  };
+
 
   // ══════════════════════════════════════════════════════════════════════════════
   //   RENDER
@@ -805,6 +880,22 @@ export default function App() {
           >
             🔄 OTBI - FDI Match Bridge
           </button>
+          <button
+            onClick={() => { setWorkspace('pvo'); setActiveColumn(null); setMetricDetails(null); }}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '18px',
+              border: 'none',
+              background: workspace === 'pvo' ? 'var(--primary)' : 'none',
+              color: workspace === 'pvo' ? '#fff' : 'var(--text-muted)',
+              fontSize: '11px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.15s'
+            }}
+          >
+            🔍 PVO Finder
+          </button>
         </div>
 
         <div className="topbar-divider" />
@@ -834,7 +925,7 @@ export default function App() {
                 </select>
               </div>
             </>
-          ) : (
+          ) : workspace === 'pvo' ? null : (
             <>
               <div className="selector-group">
                 <span className="selector-label">Pillar</span>
@@ -886,7 +977,8 @@ export default function App() {
       <div className={`workspace ${compareMode ? 'compare-mode' : ''}`} style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
 
         {/* ── LEFT SIDEBAR: Presentation Tables ─────────────────────────────── */}
-        <aside className="pres-sidebar">
+        {workspace !== 'pvo' && (
+          <aside className="pres-sidebar">
           <div className="sidebar-head">
             <div className="sidebar-head-row">
               <span className="sidebar-head-title">Presentation Tables</span>
@@ -969,9 +1061,199 @@ export default function App() {
             )}
           </div>
         </aside>
+        )}
 
         {/* ── MAIN CANVAS ───────────────────────────────────────────────────── */}
-        <main className="canvas-main">
+        {workspace === 'pvo' ? (
+          <main style={{ display: 'flex', flex: 1, height: '100%', background: 'var(--bg-app)', padding: '24px', gap: '24px', overflow: 'hidden' }}>
+            {/* Left Side: Inputs */}
+            <section style={{
+              flex: '0 0 400px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              boxShadow: 'var(--sh-md)'
+            }}>
+              <div>
+                <h3 style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-h)', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>🔍</span> PVO Finder & Extender
+                </h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                  Locate Fusion PVO source views and generate steps to augment your FDI semantic warehouse.
+                </p>
+              </div>
+
+              <form onSubmit={handlePvoFinderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
+                    1. Target OTBI Subject Area
+                  </label>
+                  <select
+                    className="selector-select"
+                    style={{ width: '100%', background: 'var(--bg-app)', border: '1px solid var(--border)' }}
+                    value={pvoOtbiSA}
+                    onChange={e => setPvoOtbiSA(e.target.value)}
+                  >
+                    {otbiSubjectAreas.map(sa => (
+                      <option key={sa.slug} value={sa.name}>{sa.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
+                    2. Target FDI Subject Area
+                  </label>
+                  <select
+                    className="selector-select"
+                    style={{ width: '100%', background: 'var(--bg-app)', border: '1px solid var(--border)' }}
+                    value={pvoFdiSA}
+                    onChange={e => setPvoFdiSA(e.target.value)}
+                  >
+                    {subjectAreas.map(sa => (
+                      <option key={sa.slug} value={sa.name}>[{sa.pillar}] {sa.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                  <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
+                    3. Missing Data Business Case
+                  </label>
+                  <textarea
+                    style={{
+                      width: '100%',
+                      flex: 1,
+                      minHeight: '150px',
+                      background: 'var(--bg-app)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '12px',
+                      color: 'var(--text-h)',
+                      fontFamily: 'var(--font-ui)',
+                      fontSize: '13px',
+                      resize: 'none',
+                      lineHeight: '1.5'
+                    }}
+                    placeholder="Describe the transaction data or column that is present in Fusion but missing from FDI. E.g., 'Uncoded credit card transactions are present in Fusion under Credit Card Transactions but are not extracted to FDI.'"
+                    value={pvoExplanation}
+                    onChange={e => setPvoExplanation(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={pvoLoading || !pvoExplanation.trim()}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: 'var(--primary)',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    fontSize: '13px',
+                    cursor: pvoLoading ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.15s',
+                    opacity: pvoLoading || !pvoExplanation.trim() ? 0.6 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  {pvoLoading ? 'Generating Blueprint...' : 'Generate FDI Customization Plan'}
+                </button>
+              </form>
+            </section>
+
+            {/* Right Side: Output */}
+            <section style={{
+              flex: 1,
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              boxShadow: 'var(--sh-md)'
+            }}>
+              <div style={{
+                padding: '16px 24px',
+                borderBottom: '1px solid var(--border)',
+                background: 'var(--bg-app)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}>
+                <span style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--text-muted)' }}>
+                  🛠️ FDI Customization Plan & Join Blueprint
+                </span>
+                {pvoResult && (
+                  <button
+                    onClick={() => { setPvoResult(''); setPvoExplanation(''); }}
+                    style={{
+                      border: 'none',
+                      background: 'none',
+                      color: 'var(--text-faint)',
+                      fontSize: '11px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    Clear Plan
+                  </button>
+                )}
+              </div>
+
+              <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+                {pvoLoading ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px' }}>
+                    <span style={{ fontSize: '32px', animation: 'spin 1s linear infinite', color: 'var(--primary)' }}>⟳</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-h)' }}>
+                        {pvoStepIndex === 0 && "Analyzing OTBI lineage data..."}
+                        {pvoStepIndex === 1 && "Finding relevant Fusion PVO views..."}
+                        {pvoStepIndex === 2 && "Designing join configurations in FDI..."}
+                        {pvoStepIndex === 3 && "Structuring Sandbox extension guide..."}
+                      </span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking Grok to engineer the blueprint...</span>
+                    </div>
+                  </div>
+                ) : pvoError ? (
+                  <div style={{
+                    padding: '16px',
+                    borderRadius: '8px',
+                    background: 'rgba(239,68,68,0.1)',
+                    border: '1px solid rgba(239,68,68,0.2)',
+                    color: '#EF4444',
+                    fontSize: '13px'
+                  }}>
+                    <strong>Error: </strong> {pvoError}
+                  </div>
+                ) : pvoResult ? (
+                  <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
+                    {renderMarkdown(pvoResult)}
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px', color: 'var(--text-faint)', textAlign: 'center', padding: '0 40px' }}>
+                    <span style={{ fontSize: '48px' }}>🤖</span>
+                    <h4 style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-muted)' }}>No Blueprint Generated Yet</h4>
+                    <p style={{ fontSize: '12.5px', maxWidth: '360px', margin: '0 auto', lineHeight: 1.5 }}>
+                      Fill out the form on the left, explaining your business case. Grok will generate a customized implementation plan with target PVOs, FDI tables, join keys, and a Sandbox configuration guide.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </main>
+        ) : (
+          <main className="canvas-main">
 
           {/* Action bar */}
           <div className="canvas-actionbar">
@@ -1323,15 +1605,14 @@ export default function App() {
                           </div>
                         )}
                       </div>
-
-                    </div>
+                  </div>
                   )}
-
                 </div>
               </aside>
             )}
           </div>
         </main>
+      )}
 
         {/* ── COMPARE PANE ─────────────────────────────────────────────────── */}
         {compareMode && (

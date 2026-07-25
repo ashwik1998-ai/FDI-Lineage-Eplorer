@@ -605,6 +605,78 @@ Do not include any conversational filler, markdown formatting (like \`\`\`json .
   }
 });
 
+// 10. POST /api/ai/pvo-finder - Database-aware PVO Finder and FDI Semantic Extender
+app.post('/api/ai/pvo-finder', async (req, res) => {
+  try {
+    const { otbiSubjectArea, fdiSubjectArea, explanation } = req.body;
+    if (!otbiSubjectArea || !fdiSubjectArea || !explanation) {
+      return res.status(400).json({ error: 'Missing parameters. Provide otbiSubjectArea, fdiSubjectArea, and explanation.' });
+    }
+
+    // Fetch actual PVOs associated with this OTBI subject area from the database
+    let relatedPvos = [];
+    if (cachedOtbiSubjectAreas) {
+      const match = cachedOtbiSubjectAreas.find(x => slugify(x.name) === slugify(otbiSubjectArea) || slugify(x.slug) === slugify(otbiSubjectArea));
+      if (match) {
+        const table = match.sourceTable;
+        try {
+          const pvoRes = await db.execute({
+            sql: `SELECT DISTINCT physical_table 
+                  FROM ${table} 
+                  WHERE subject_area = ? AND physical_table IS NOT NULL AND physical_table != 'NaN' AND physical_table != ''`,
+            args: [match.name]
+          });
+          relatedPvos = pvoRes.rows.map(r => r.physical_table);
+        } catch (err) {
+          console.error('Error fetching PVOs for PVO finder:', err.message);
+        }
+      }
+    }
+
+    const systemPrompt = `You are a senior data architect specializing in Oracle Analytics Cloud (OAC), Oracle Fusion Applications, and Oracle Fusion Data Intelligence (FDI) logical models.
+Your task is to analyze a missing data business case and design a step-by-step Semantic Extension plan inside the FDI Sandbox framework using Fusion physical source PVOs.`;
+
+    const userPrompt = `User Customization Case:
+- Missing Data Business Scenario: "${explanation}"
+- Target OTBI Subject Area in Fusion: "${otbiSubjectArea}"
+- Target FDI Subject Area in Warehouse: "${fdiSubjectArea}"
+
+Actual PVOs associated with OTBI Subject Area "${otbiSubjectArea}" in our database:
+${relatedPvos.length > 0 ? relatedPvos.map(p => `- ${p}`).join('\n') : '(No direct PVO mappings found. Suggest the standard Fusion PVO based on your knowledge.)'}
+
+Task:
+Provide a detailed customization plan using the following structure:
+
+### 1. Recommended PVO
+Specify the best Fusion PVO to augment (e.g. FscmTopModelAM.FinAmModelAM.CreditCardTransactionPVO). Explain what this PVO represents and why it solves the user's missing data problem.
+
+### 2. Suggested Columns
+List the critical attributes or columns we need to select from this PVO (e.g. CardholderId, TransactionAmount).
+
+### 3. Join Configuration
+Specify:
+- Extensibility Pattern: Choose either "Extend a Dimension", "Add a Dimension", or "Add a Fact".
+- Target FDI Warehouse Table: Which standard FDI table (e.g. DW_PARTY_D, DW_AP_INVOICES_F) we should join it with.
+- Join Key Mapping: Define the primary and foreign keys used to link the PVO with the FDI target table.
+
+### 4. Sandbox Framework Guide
+Write a concise step-by-step guide on how to configure this in the FDI Console using the Sandbox Framework:
+1. Create and open a customization Sandbox.
+2. Augment the PVO data source (Data Augmentation).
+3. Open the Logical Star and establish the join configuration.
+4. Add custom presentation columns to the "${fdiSubjectArea}" subject area.
+5. Validate, merge, and publish the Sandbox.
+
+Make your response technical, highly structured, clean, and in standard markdown format.`;
+
+    const result = await callGrok(systemPrompt, userPrompt);
+    res.json({ plan: result });
+  } catch (err) {
+    console.error('PVO Finder error:', err.message);
+    res.status(500).json({ error: err.message || 'PVO Finder plan generation failed' });
+  }
+});
+
 // Serve frontend React static build files (production mode)
 app.use(express.static(path.join(__dirname, 'dist')));
 
