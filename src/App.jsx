@@ -177,7 +177,7 @@ export default function App() {
   const [activeColumn, setActiveColumn] = useState(null); // { tableId, colName }
 
   // UI
-  const [darkMode,       setDarkMode]       = useState(false);
+  const [darkMode,       setDarkMode]       = useState(true);
   const [searchOpen,     setSearchOpen]     = useState(false);
   const [searchQuery,    setSearchQuery]     = useState('');
   const [searchResults,  setSearchResults]   = useState([]);
@@ -343,11 +343,29 @@ export default function App() {
   // ── Load compare lineage ─────────────────────────────────────────────────────
   useEffect(() => {
     if (!compareMode || !compareSA) return;
+
+    if (fdiLineageCache[compareSA]) {
+      const cached = fdiLineageCache[compareSA];
+      setCmpNodes(cached.nodes);
+      setCmpEdges(cached.edges);
+      setCmpMappings(cached.mappings);
+      setCmpPresTable(null);
+      return;
+    }
+
     setCmpNodes([]); setCmpEdges([]); setCmpMappings([]); setCmpPresTable(null);
     (async () => {
       try {
         const data = await fetch(`/api/lineage/${compareSA}`).then(r => r.json());
-        setCmpNodes(data.nodes || []); setCmpEdges(data.edges || []); setCmpMappings(data.mappings || []);
+        const nodesList = data.nodes || [];
+        const edgesList = data.edges || [];
+        const mappingsList = data.mappings || [];
+        
+        fdiLineageCache[compareSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        
+        setCmpNodes(nodesList);
+        setCmpEdges(edgesList);
+        setCmpMappings(mappingsList);
       } catch {}
     })();
   }, [compareSA, compareMode]);

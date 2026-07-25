@@ -30,8 +30,12 @@ const slugify = (text) => {
     .replace(/[\s-]+/g, '_');
 };
 
-// Cache for loaded subject areas
+// Caches for loaded subject areas and response data to minimize database reads
 let cachedSubjectAreas = null;
+const fdiLineageDataCache = {};
+const otbiLineageDataCache = {};
+const searchCache = {};
+const serverMatchCache = {};
 
 async function loadSubjectAreas() {
   const pillars = ['erp', 'hcm', 'scm', 'cx'];
@@ -98,6 +102,11 @@ app.get('/api/search', async (req, res) => {
   const q = (req.query.q || '').trim();
   if (q.length < 2) return res.json([]);
 
+  const cacheKey = q.toLowerCase();
+  if (searchCache[cacheKey]) {
+    return res.json(searchCache[cacheKey]);
+  }
+
   const pillars = ['erp', 'hcm', 'scm', 'cx'];
   const results = [];
   const seen = new Set();
@@ -133,6 +142,7 @@ app.get('/api/search', async (req, res) => {
     if (results.length >= 50) break;
   }
 
+  searchCache[cacheKey] = results;
   res.json(results);
 });
 
@@ -140,6 +150,11 @@ app.get('/api/search', async (req, res) => {
 app.get('/api/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
+    const cacheKey = slug.toLowerCase();
+    if (fdiLineageDataCache[cacheKey]) {
+      return res.json(fdiLineageDataCache[cacheKey]);
+    }
+
     const sas = cachedSubjectAreas || await loadSubjectAreas();
     const saInfo = sas.find(x => x.slug === slug);
     if (!saInfo) {
@@ -252,14 +267,16 @@ app.get('/api/lineage/:slug', async (req, res) => {
       });
     });
     
-    res.json({
+    const responseData = {
       subjectArea: saInfo.name,
       pillar: saInfo.pillars[0],
       pillars: saInfo.pillars,
       nodes: reactNodes,
       edges: reactEdges,
       mappings: mappings
-    });
+    };
+    fdiLineageDataCache[cacheKey] = responseData;
+    res.json(responseData);
     
   } catch (err) {
     console.error('Error compiling lineage data:', err);
@@ -374,6 +391,11 @@ app.get('/api/otbi/subject-areas', async (req, res) => {
 app.get('/api/otbi/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
+    const cacheKey = slug.toLowerCase();
+    if (otbiLineageDataCache[cacheKey]) {
+      return res.json(otbiLineageDataCache[cacheKey]);
+    }
+
     let mappings = [];
     let targetTable = null;
     let targetSAName = null;
@@ -474,11 +496,13 @@ app.get('/api/otbi/lineage/:slug', async (req, res) => {
       });
     });
     
-    res.json({
+    const responseData = {
       nodes: reactNodes,
       edges: reactEdges,
       mappings: mappings
-    });
+    };
+    otbiLineageDataCache[cacheKey] = responseData;
+    res.json(responseData);
   } catch (err) {
     console.error('Error fetching OTBI lineage:', err.message);
     res.status(500).json({ error: 'Failed to fetch OTBI lineage data' });
@@ -491,6 +515,11 @@ app.post('/api/ai/match-fdi', async (req, res) => {
     const { otbiColumn, otbiTable, pvoName, pvoAttribute } = req.body;
     if (!otbiColumn || !pvoName) {
       return res.status(400).json({ error: 'Missing matching parameters' });
+    }
+
+    const cacheKey = `${otbiTable}||${otbiColumn}||${pvoName}||${pvoAttribute}`;
+    if (serverMatchCache[cacheKey]) {
+      return res.json(serverMatchCache[cacheKey]);
     }
     
     const pvoClean = pvoName.replace(/PVO$/i, '');
@@ -595,10 +624,12 @@ Do not include any conversational filler, markdown formatting (like \`\`\`json .
       // Fallback: parse markdown list if JSON fails (rare for llama-3.3-70b)
     }
     
-    res.json({
+    const responseData = {
       exactMatches,
       matches: parsedMatches
-    });
+    };
+    serverMatchCache[cacheKey] = responseData;
+    res.json(responseData);
   } catch (err) {
     console.error('AI match error:', err.message);
     res.status(500).json({ error: err.message || 'AI matching failed' });
@@ -611,6 +642,11 @@ app.post('/api/ai/pvo-finder', async (req, res) => {
     const { otbiSubjectArea, fdiSubjectArea, explanation } = req.body;
     if (!otbiSubjectArea || !fdiSubjectArea || !explanation) {
       return res.status(400).json({ error: 'Missing parameters. Provide otbiSubjectArea, fdiSubjectArea, and explanation.' });
+    }
+
+    const cacheKey = `${otbiSubjectArea}||${fdiSubjectArea}||${explanation.toLowerCase().trim()}`;
+    if (serverMatchCache[cacheKey]) {
+      return res.json(serverMatchCache[cacheKey]);
     }
 
     // Fetch actual PVOs associated with this OTBI subject area from the database
@@ -670,7 +706,9 @@ Write a concise step-by-step guide on how to configure this in the FDI Console u
 Make your response technical, highly structured, clean, and in standard markdown format.`;
 
     const result = await callGrok(systemPrompt, userPrompt);
-    res.json({ plan: result });
+    const responseData = { plan: result };
+    serverMatchCache[cacheKey] = responseData;
+    res.json(responseData);
   } catch (err) {
     console.error('PVO Finder error:', err.message);
     res.status(500).json({ error: err.message || 'PVO Finder plan generation failed' });
@@ -689,3 +727,15 @@ app.get('/{*path}', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Warm up caches on startup asynchronously to save initial database reads
+(async () => {
+  try {
+    console.log('Warming up subject area caches on startup...');
+    await loadSubjectAreas();
+    await loadOtbiSubjectAreas();
+    console.log('Cache warmup completed successfully.');
+  } catch (err) {
+    console.error('Error warming up caches on startup:', err.message);
+  }
+})();
