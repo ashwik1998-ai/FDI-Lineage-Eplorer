@@ -193,68 +193,77 @@ function SearchableSelect({ options, value, onChange, placeholder, style }) {
   return (
     <div ref={containerRef} style={{ position: 'relative', width: '100%', minWidth: '220px', ...style }}>
       <div 
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          if (!isOpen) setSearch('');
+        }}
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '8px 12px',
-          background: 'var(--bg-app)',
-          border: '1px solid var(--border)',
+          background: 'var(--bg-card, #181C27)',
+          border: isOpen ? '1px solid var(--primary)' : '1px solid var(--border-md, #374151)',
           borderRadius: '8px',
           cursor: 'pointer',
           color: 'var(--text-h)',
           fontSize: '13px',
-          height: '36px',
-          boxSizing: 'border-box'
+          height: '38px',
+          boxSizing: 'border-box',
+          boxShadow: isOpen ? '0 0 0 2px var(--primary-bg)' : 'none',
+          transition: 'all 0.15s'
         }}
       >
-        <span style={{ 
-          whiteSpace: 'nowrap', 
-          overflow: 'hidden', 
-          textOverflow: 'ellipsis',
-          flex: 1,
-          color: selectedOption ? 'var(--text-h)' : 'var(--text-muted)'
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
           {isOpen ? (
-            <input 
-              type="text"
-              autoFocus
-              value={search}
-              placeholder="Type to filter..."
-              onChange={(e) => setSearch(e.target.value)}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-h)',
-                outline: 'none',
-                width: '100%',
-                fontSize: '13px',
-                padding: '0'
-              }}
-            />
+            <>
+              <span style={{ fontSize: '12px', color: 'var(--primary)', flexShrink: 0 }}>🔍</span>
+              <input 
+                type="text"
+                autoFocus
+                value={search}
+                placeholder="Type to filter..."
+                onChange={(e) => setSearch(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-h)',
+                  outline: 'none',
+                  width: '100%',
+                  fontSize: '13px',
+                  padding: '0'
+                }}
+              />
+            </>
           ) : (
-            displayLabel || placeholder || 'Select...'
+            <span style={{ 
+              whiteSpace: 'nowrap', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis',
+              flex: 1,
+              color: selectedOption ? 'var(--text-h)' : 'var(--text-muted)'
+            }}>
+              {displayLabel || placeholder || 'Select...'}
+            </span>
           )}
-        </span>
-        <span style={{ fontSize: '9px', color: 'var(--text-faint)', marginLeft: '8px' }}>{isOpen ? '▲' : '▼'}</span>
+        </div>
+        <span style={{ fontSize: '9px', color: 'var(--text-faint)', marginLeft: '8px', flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
       </div>
 
       {isOpen && (
         <div style={{
           position: 'absolute',
-          top: '100%',
+          top: 'calc(100% + 4px)',
           left: '0',
           right: '0',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border)',
+          background: '#181C27',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '8px',
-          marginTop: '4px',
           maxHeight: '220px',
           overflowY: 'auto',
-          zIndex: 1000,
-          boxShadow: 'var(--sh-lg)',
+          zIndex: 99999,
+          boxShadow: '0 12px 32px rgba(0,0,0,0.85)',
           padding: '4px'
         }}>
           {filtered.length > 0 ? (
@@ -283,7 +292,7 @@ function SearchableSelect({ options, value, onChange, placeholder, style }) {
                 }}
                 onMouseEnter={(e) => {
                   if (opt.value !== value) {
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -296,8 +305,8 @@ function SearchableSelect({ options, value, onChange, placeholder, style }) {
               </div>
             ))
           ) : (
-            <div style={{ padding: '8px 12px', color: 'var(--text-faint)', fontSize: '12.5px', textAlign: 'center' }}>
-              No matches found
+            <div style={{ padding: '10px 12px', color: 'var(--text-faint)', fontSize: '12.5px', textAlign: 'center' }}>
+              No matching subject areas found
             </div>
           )}
         </div>

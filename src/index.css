@@ -42,6 +42,7 @@
   /* Semantic aliases */
   --bg-app:     #F3F4F6;
   --bg-surface: #FFFFFF;
+  --bg-card:    #FFFFFF;
   --bg-hover:   #F9FAFB;
   --border:     #E5E7EB;
   --border-md:  #D1D5DB;
@@ -91,6 +92,7 @@
 .dark-mode {
   --bg-app:     #0F1117;
   --bg-surface: #181C27;
+  --bg-card:    #181C27;
   --bg-hover:   #1E2333;
   --border:     rgba(255,255,255,0.08);
   --border-md:  rgba(255,255,255,0.12);
