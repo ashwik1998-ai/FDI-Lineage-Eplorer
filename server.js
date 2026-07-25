@@ -329,31 +329,40 @@ Keep it under 150 words, structured, and easy to read.`;
 // Consolidated list of OTBI tables
 const OTBI_TABLES = ['"OTBI-Finance"', '"OTBI-HCM"', '"OTBI-SCM"', '"OTBI-CX"', '"OTBI-Project"'];
 
-// 7. GET /api/otbi/subject-areas - Consolidated list of subject areas from the 5 tables
+// Cache for loaded OTBI subject areas
+let cachedOtbiSubjectAreas = null;
+
+async function loadOtbiSubjectAreas() {
+  const sas = [];
+  for (const table of OTBI_TABLES) {
+    try {
+      const result = await db.execute(`
+        SELECT DISTINCT subject_area 
+        FROM ${table} 
+        ORDER BY subject_area ASC
+      `);
+      result.rows.forEach(r => {
+        if (r.subject_area && !sas.some(x => x.name === r.subject_area)) {
+          sas.push({
+            slug: slugify(r.subject_area),
+            name: r.subject_area,
+            sourceTable: table
+          });
+        }
+      });
+    } catch (err) {
+      console.error(`Error loading subject areas from ${table}:`, err.message);
+    }
+  }
+  sas.sort((a, b) => a.name.localeCompare(b.name));
+  cachedOtbiSubjectAreas = sas;
+  return sas;
+}
+
+// 7. GET /api/otbi/subject-areas - Consolidated list of subject areas from the 5 tables (cached)
 app.get('/api/otbi/subject-areas', async (req, res) => {
   try {
-    const sas = [];
-    for (const table of OTBI_TABLES) {
-      try {
-        const result = await db.execute(`
-          SELECT DISTINCT subject_area 
-          FROM ${table} 
-          ORDER BY subject_area ASC
-        `);
-        result.rows.forEach(r => {
-          if (r.subject_area && !sas.some(x => x.name === r.subject_area)) {
-            sas.push({
-              slug: slugify(r.subject_area),
-              name: r.subject_area,
-              sourceTable: table
-            });
-          }
-        });
-      } catch (err) {
-        console.error(`Error loading subject areas from ${table}:`, err.message);
-      }
-    }
-    sas.sort((a, b) => a.name.localeCompare(b.name));
+    const sas = cachedOtbiSubjectAreas || await loadOtbiSubjectAreas();
     res.json(sas);
   } catch (err) {
     console.error('Error fetching OTBI subject areas:', err.message);
@@ -361,7 +370,7 @@ app.get('/api/otbi/subject-areas', async (req, res) => {
   }
 });
 
-// 8. GET /api/otbi/lineage/:slug - Get mappings across the 5 tables for a subject area
+// 8. GET /api/otbi/lineage/:slug - Get mappings across the 5 tables for a subject area (cached checks)
 app.get('/api/otbi/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
@@ -369,19 +378,12 @@ app.get('/api/otbi/lineage/:slug', async (req, res) => {
     let targetTable = null;
     let targetSAName = null;
     
-    // Find which table contains this subject area slug
-    for (const table of OTBI_TABLES) {
-      try {
-        const saCheck = await db.execute(`SELECT DISTINCT subject_area FROM ${table}`);
-        const match = saCheck.rows.find(r => slugify(r.subject_area || '') === slug);
-        if (match) {
-          targetTable = table;
-          targetSAName = match.subject_area;
-          break;
-        }
-      } catch (err) {
-        // Table might not exist or be empty
-      }
+    // Find which table contains this subject area slug from cache mapping
+    const sas = cachedOtbiSubjectAreas || await loadOtbiSubjectAreas();
+    const match = sas.find(x => x.slug === slug);
+    if (match) {
+      targetTable = match.sourceTable;
+      targetSAName = match.name;
     }
     
     if (targetTable && targetSAName) {
@@ -495,52 +497,64 @@ app.post('/api/ai/match-fdi', async (req, res) => {
     const pvoSearch = `%${pvoClean}%`;
     const attrSearch = `%${pvoAttribute}%`;
     
-    // 1. Fetch EXACT matches from FDI mappings table
+    // 1. Fetch EXACT matches from the 4 FDI mappings tables
     let exactMatches = [];
-    try {
-      const exactRes = await db.execute({
-        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM lineage_mappings
-              WHERE (physical_table LIKE ? OR physical_table = ?) AND physical_column = ?`,
-        args: [pvoSearch, pvoName, pvoAttribute]
-      });
-      exactMatches = exactRes.rows.map(r => ({
-        subjectArea: r.subject_area,
-        presentationTable: r.presentation_table,
-        presentationColumn: r.presentation_column,
-        physicalTable: r.physical_table,
-        physicalColumn: r.physical_column
-      }));
-    } catch (exactErr) {
-      console.error('Exact DB Match error:', exactErr.message);
+    const pillars = ['erp', 'hcm', 'scm', 'cx'];
+    
+    for (const p of pillars) {
+      try {
+        const exactRes = await db.execute({
+          sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
+                FROM ${p}_semantic_model_lineage
+                WHERE (physical_table LIKE ? OR physical_table = ?) AND physical_column = ?`,
+          args: [pvoSearch, pvoName, pvoAttribute]
+        });
+        exactRes.rows.forEach(r => {
+          exactMatches.push({
+            subjectArea: r.subject_area,
+            presentationTable: r.presentation_table,
+            presentationColumn: r.presentation_column,
+            physicalTable: r.physical_table,
+            physicalColumn: r.physical_column
+          });
+        });
+      } catch (exactErr) {
+        console.error(`Exact DB Match error for ${p}:`, exactErr.message);
+      }
     }
 
     // 2. Fetch wider candidates for Grok semantic matching
     let candidatesRows = [];
-    try {
-      const dbRes = await db.execute({
-        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-              FROM lineage_mappings
-              WHERE physical_table LIKE ? OR physical_column LIKE ? OR physical_table LIKE ?
-              LIMIT 25`,
-        args: [pvoSearch, attrSearch, `%${pvoName}%`]
-      });
-      candidatesRows = dbRes.rows;
-    } catch (dbErr) {
-      console.error('Candidate fetch error:', dbErr.message);
-    }
-    
-    if (candidatesRows.length === 0) {
+    for (const p of pillars) {
       try {
         const dbRes = await db.execute({
           sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
-                FROM lineage_mappings
-                WHERE presentation_column LIKE ?
-                LIMIT 15`,
-          args: [`%${otbiColumn}%`]
+                FROM ${p}_semantic_model_lineage
+                WHERE physical_table LIKE ? OR physical_column LIKE ? OR physical_table LIKE ?
+                LIMIT 10`,
+          args: [pvoSearch, attrSearch, `%${pvoName}%`]
         });
-        candidatesRows = dbRes.rows;
-      } catch (e) {}
+        candidatesRows.push(...dbRes.rows);
+        if (candidatesRows.length >= 25) break;
+      } catch (dbErr) {
+        console.error(`Candidate fetch error for ${p}:`, dbErr.message);
+      }
+    }
+    
+    if (candidatesRows.length === 0) {
+      for (const p of pillars) {
+        try {
+          const dbRes = await db.execute({
+            sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
+                  FROM ${p}_semantic_model_lineage
+                  WHERE presentation_column LIKE ?
+                  LIMIT 5`,
+            args: [`%${otbiColumn}%`]
+          });
+          candidatesRows.push(...dbRes.rows);
+          if (candidatesRows.length >= 15) break;
+        } catch (e) {}
+      }
     }
     
     // 3. Ask Grok to explain semantic suggestions

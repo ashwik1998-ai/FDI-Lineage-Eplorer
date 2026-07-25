@@ -16,6 +16,12 @@ import TableNode from './components/TableNode';
 const nodeTypes = { tableNode: TableNode };
 const RECENT_KEY = 'fdi_recent_v2';
 
+// ─── Frontend In-Memory Caches ───────────────────────────────────────────────
+const fdiLineageCache = {};
+const otbiLineageCache = {};
+const matchCache = {};
+const explanationCache = {};
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const getRecent   = () => { try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; } };
 const pushRecent  = (item) => {
@@ -225,15 +231,34 @@ export default function App() {
   // ── Load lineage (FDI) ────────────────────────────────────────────────────────
   useEffect(() => {
     if (workspace !== 'fdi' || !selectedSA) return;
+
+    if (fdiLineageCache[selectedSA]) {
+      const cached = fdiLineageCache[selectedSA];
+      setNodes(cached.nodes);
+      setEdges(cached.edges);
+      setMappings(cached.mappings);
+      setActiveColumn(null);
+      setMetricDetails(null);
+      setSelectedPresTable(null);
+      return;
+    }
+
     setNodes([]); setEdges([]); setMappings([]);
     setActiveColumn(null); setMetricDetails(null); setSelectedPresTable(null);
 
     (async () => {
       try {
         const data = await fetch(`/api/lineage/${selectedSA}`).then(r => r.json());
-        setNodes(data.nodes  || []);
-        setEdges(data.edges  || []);
-        setMappings(data.mappings || []);
+        const nodesList = data.nodes || [];
+        const edgesList = data.edges || [];
+        const mappingsList = data.mappings || [];
+        
+        fdiLineageCache[selectedSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        
+        setNodes(nodesList);
+        setEdges(edgesList);
+        setMappings(mappingsList);
+        
         const sa = subjectAreas.find(x => x.slug === selectedSA);
         if (sa) { pushRecent({ slug: sa.slug, name: sa.name, pillar: sa.pillar }); setRecentlyViewed(getRecent()); }
       } catch (e) { console.error('Lineage load failed', e); }
@@ -243,15 +268,33 @@ export default function App() {
   // ── Load lineage (OTBI) ───────────────────────────────────────────────────────
   useEffect(() => {
     if (workspace !== 'otbi' || !selectedOtbiSA) return;
+
+    if (otbiLineageCache[selectedOtbiSA]) {
+      const cached = otbiLineageCache[selectedOtbiSA];
+      setNodes(cached.nodes);
+      setEdges(cached.edges);
+      setMappings(cached.mappings);
+      setActiveColumn(null);
+      setMetricDetails(null);
+      setSelectedOtbiTable(null);
+      return;
+    }
+
     setNodes([]); setEdges([]); setMappings([]);
     setActiveColumn(null); setMetricDetails(null); setSelectedOtbiTable(null);
 
     (async () => {
       try {
         const data = await fetch(`/api/otbi/lineage/${selectedOtbiSA}`).then(r => r.json());
-        setNodes(data.nodes || []);
-        setEdges(data.edges || []);
-        setMappings(data.mappings || []);
+        const nodesList = data.nodes || [];
+        const edgesList = data.edges || [];
+        const mappingsList = data.mappings || [];
+        
+        otbiLineageCache[selectedOtbiSA] = { nodes: nodesList, edges: edgesList, mappings: mappingsList };
+        
+        setNodes(nodesList);
+        setEdges(edgesList);
+        setMappings(mappingsList);
       } catch (e) { console.error('OTBI lineage load failed', e); }
     })();
   }, [workspace, selectedOtbiSA]);
@@ -617,6 +660,13 @@ export default function App() {
   // ── AI Fetchers ─────────────────────────────────────────────────────────────
   const fetchAiExplanation = useCallback(async () => {
     if (!metricDetails || aiExplanation || aiExplainLoading) return;
+    
+    const cacheKey = `${currentSAName}||${metricDetails.tableName}||${metricDetails.name}`;
+    if (explanationCache[cacheKey]) {
+      setAiExplanation(explanationCache[cacheKey]);
+      return;
+    }
+
     setAiExplainLoading(true);
     try {
       const res = await fetch('/api/ai/explain', {
@@ -630,6 +680,8 @@ export default function App() {
         })
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
+      
+      explanationCache[cacheKey] = res.explanation;
       setAiExplanation(res.explanation);
     } catch (e) {
       setAiExplanation(`Failed to load AI explanation: ${e.message}`);
@@ -640,6 +692,15 @@ export default function App() {
 
   const fetchAiFdiMatches = useCallback(async () => {
     if (!metricDetails || (Array.isArray(aiMatchedFdi) && aiMatchedFdi.length > 0) || aiMatchedFdiLoading) return;
+    
+    const cacheKey = `${metricDetails.tableName}||${metricDetails.name}`;
+    if (matchCache[cacheKey]) {
+      const cached = matchCache[cacheKey];
+      setExactMatchedFdi(cached.exactMatches);
+      setAiMatchedFdi(cached.matches);
+      return;
+    }
+
     setAiMatchedFdiLoading(true);
     setAiMatchedFdiError('');
     try {
@@ -663,14 +724,14 @@ export default function App() {
         })
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
-      setExactMatchedFdi(res.exactMatches || []);
       
-      if (Array.isArray(res.matches)) {
-        setAiMatchedFdi(res.matches);
-      } else {
-        setAiMatchedFdi([]);
-        setAiMatchedFdiError(typeof res.matches === 'string' ? res.matches : "Failed to load valid recommendations.");
-      }
+      const exactList = res.exactMatches || [];
+      const aiList = Array.isArray(res.matches) ? res.matches : [];
+      
+      matchCache[cacheKey] = { exactMatches: exactList, matches: aiList };
+      
+      setExactMatchedFdi(exactList);
+      setAiMatchedFdi(aiList);
     } catch (e) {
       setAiMatchedFdi([]);
       setAiMatchedFdiError(`Failed to load AI matches: ${e.message}`);
