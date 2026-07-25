@@ -232,8 +232,9 @@ export default function App() {
         }
 
         const p = new URLSearchParams(window.location.search);
-        const urlSA = p.get('sa'), urlFolder = p.get('folder');
-        const urlWS = p.get('ws') || 'fdi';
+        const urlSA = p.get('sa');
+        const urlFolder = p.get('folder') || p.get('table');
+        const urlWS = p.get('ws') || p.get('workspace') || 'fdi';
         setWorkspace(urlWS);
 
         if (urlWS === 'otbi') {
@@ -867,7 +868,16 @@ export default function App() {
           gap: '2px'
         }}>
           <button
-            onClick={() => { setWorkspace('fdi'); setActiveColumn(null); setMetricDetails(null); }}
+            onClick={() => {
+              setWorkspace('fdi');
+              setNodes([]);
+              setEdges([]);
+              setMappings([]);
+              setActiveColumn(null);
+              setMetricDetails(null);
+              setSelectedPresTable(null);
+              setSelectedOtbiTable(null);
+            }}
             style={{
               padding: '6px 14px',
               borderRadius: '18px',
@@ -883,7 +893,16 @@ export default function App() {
             📊 FDI Warehouse
           </button>
           <button
-            onClick={() => { setWorkspace('otbi'); setActiveColumn(null); setMetricDetails(null); }}
+            onClick={() => {
+              setWorkspace('otbi');
+              setNodes([]);
+              setEdges([]);
+              setMappings([]);
+              setActiveColumn(null);
+              setMetricDetails(null);
+              setSelectedPresTable(null);
+              setSelectedOtbiTable(null);
+            }}
             style={{
               padding: '6px 14px',
               borderRadius: '18px',
@@ -899,7 +918,16 @@ export default function App() {
             🔄 OTBI - FDI Match Bridge
           </button>
           <button
-            onClick={() => { setWorkspace('pvo'); setActiveColumn(null); setMetricDetails(null); }}
+            onClick={() => {
+              setWorkspace('pvo');
+              setNodes([]);
+              setEdges([]);
+              setMappings([]);
+              setActiveColumn(null);
+              setMetricDetails(null);
+              setSelectedPresTable(null);
+              setSelectedOtbiTable(null);
+            }}
             style={{
               padding: '6px 14px',
               borderRadius: '18px',
