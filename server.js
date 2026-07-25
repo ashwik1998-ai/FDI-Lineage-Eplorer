@@ -509,16 +509,20 @@ app.post('/api/ai/match-fdi', async (req, res) => {
       }
     }
 
-    // 2. Fetch wider candidates for Grok semantic matching
+    // 2. Fetch wider candidates for Grok semantic matching (highly optimized using single-column indexes)
     let candidatesRows = [];
+    const attrUpper = pvoAttribute.toUpperCase();
+    const attrLower = pvoAttribute.toLowerCase();
+
     for (const p of pillars) {
       try {
+        // Query using single-column index on physical_column (very fast index scan)
         const dbRes = await db.execute({
           sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
                 FROM ${p}_semantic_model_lineage
-                WHERE physical_table LIKE ? OR physical_column LIKE ? OR physical_table LIKE ?
-                LIMIT 10`,
-          args: [pvoSearch, attrSearch, `%${pvoName}%`]
+                WHERE physical_column = ? OR physical_column = ? OR physical_column = ?
+                LIMIT 15`,
+          args: [pvoAttribute, attrUpper, attrLower]
         });
         candidatesRows.push(...dbRes.rows);
         if (candidatesRows.length >= 25) break;
@@ -526,19 +530,44 @@ app.post('/api/ai/match-fdi', async (req, res) => {
         console.error(`Candidate fetch error for ${p}:`, dbErr.message);
       }
     }
-    
-    if (candidatesRows.length === 0) {
+
+    // Fallback: Query by physical table (package-less or full name, index-supported prefix scans)
+    if (candidatesRows.length < 15) {
       for (const p of pillars) {
         try {
           const dbRes = await db.execute({
             sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
                   FROM ${p}_semantic_model_lineage
-                  WHERE presentation_column LIKE ?
-                  LIMIT 5`,
-            args: [`%${otbiColumn}%`]
+                  WHERE physical_table = ? OR physical_table = ?
+                  LIMIT 10`,
+            args: [pvoName, pvoClean]
           });
           candidatesRows.push(...dbRes.rows);
-          if (candidatesRows.length >= 15) break;
+          if (candidatesRows.length >= 25) break;
+        } catch (e) {}
+      }
+    }
+    
+    // Fallback 2: Query by presentation column (exact & prefix matches, index-supported)
+    if (candidatesRows.length === 0) {
+      const searchColUpper = otbiColumn.toUpperCase();
+      const searchColLower = otbiColumn.toLowerCase();
+      const prefixNormal = `${otbiColumn}%`;
+      const prefixUpper = `${searchColUpper}%`;
+      const prefixLower = `${searchColLower}%`;
+
+      for (const p of pillars) {
+        try {
+          const dbRes = await db.execute({
+            sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
+                  FROM ${p}_semantic_model_lineage
+                  WHERE presentation_column = ? OR presentation_column = ? OR presentation_column = ?
+                     OR presentation_column LIKE ? OR presentation_column LIKE ? OR presentation_column LIKE ?
+                  LIMIT 10`,
+            args: [otbiColumn, searchColUpper, searchColLower, prefixNormal, prefixUpper, prefixLower]
+          });
+          candidatesRows.push(...dbRes.rows);
+          if (candidatesRows.length >= 20) break;
         } catch (e) {}
       }
     }
