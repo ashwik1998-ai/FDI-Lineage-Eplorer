@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
+import fs from 'fs';
 
 // Load local environment variables from .env file
 config();
@@ -37,43 +38,21 @@ const otbiLineageDataCache = {};
 const searchCache = {};
 const serverMatchCache = {};
 
-async function loadSubjectAreas() {
-  const pillars = ['erp', 'hcm', 'scm', 'cx'];
-  const allSAs = [];
-  
-  for (const p of pillars) {
-    try {
-      const res = await db.execute(`SELECT DISTINCT subject_area FROM ${p}_semantic_model_lineage`);
-      for (const row of res.rows) {
-        const name = row.subject_area;
-        if (!name || name.trim().startsWith('Common')) continue; // Exclude Common related subject areas
-        
-        const slug = slugify(name);
-        let existing = allSAs.find(x => x.slug === slug);
-        if (existing) {
-          if (!existing.pillars.includes(p.toUpperCase())) {
-            existing.pillars.push(p.toUpperCase());
-          }
-        } else {
-          allSAs.push({
-            slug,
-            name,
-            pillar: p.toUpperCase(),
-            pillars: [p.toUpperCase()],
-            metricsCount: 0,
-            lineageCount: 0
-          });
-        }
-      }
-    } catch (err) {
-      console.error(`Error loading subject areas for table ${p}_semantic_model_lineage:`, err.message);
-    }
+// Load static subject areas metadata from JSON file to prevent database DISTINCT scans
+const metadataPath = path.join(__dirname, 'subject_areas_metadata.json');
+let staticMetadata = { fdi: [], otbi: [] };
+try {
+  if (fs.existsSync(metadataPath)) {
+    staticMetadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+    console.log(`Loaded ${staticMetadata.fdi.length} FDI and ${staticMetadata.otbi.length} OTBI subject areas from static metadata file.`);
   }
-  
-  // Sort alphabetically
-  allSAs.sort((a, b) => a.name.localeCompare(b.name));
-  cachedSubjectAreas = allSAs;
-  return allSAs;
+} catch (err) {
+  console.error('Failed to load static subject areas metadata:', err.message);
+}
+
+async function loadSubjectAreas() {
+  cachedSubjectAreas = staticMetadata.fdi;
+  return staticMetadata.fdi;
 }
 
 // 1. GET /api/subject-areas
@@ -350,30 +329,8 @@ const OTBI_TABLES = ['"OTBI-Finance"', '"OTBI-HCM"', '"OTBI-SCM"', '"OTBI-CX"', 
 let cachedOtbiSubjectAreas = null;
 
 async function loadOtbiSubjectAreas() {
-  const sas = [];
-  for (const table of OTBI_TABLES) {
-    try {
-      const result = await db.execute(`
-        SELECT DISTINCT subject_area 
-        FROM ${table} 
-        ORDER BY subject_area ASC
-      `);
-      result.rows.forEach(r => {
-        if (r.subject_area && !sas.some(x => x.name === r.subject_area)) {
-          sas.push({
-            slug: slugify(r.subject_area),
-            name: r.subject_area,
-            sourceTable: table
-          });
-        }
-      });
-    } catch (err) {
-      console.error(`Error loading subject areas from ${table}:`, err.message);
-    }
-  }
-  sas.sort((a, b) => a.name.localeCompare(b.name));
-  cachedOtbiSubjectAreas = sas;
-  return sas;
+  cachedOtbiSubjectAreas = staticMetadata.otbi;
+  return staticMetadata.otbi;
 }
 
 // 7. GET /api/otbi/subject-areas - Consolidated list of subject areas from the 5 tables (cached)

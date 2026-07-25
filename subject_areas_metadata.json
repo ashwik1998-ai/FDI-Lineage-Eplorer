@@ -1,0 +1,4725 @@
+{
+  "fdi": [
+    {
+      "slug": "content_explorer_business_questions",
+      "name": "Content Explorer - Business Questions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "content_explorer_key_metrics",
+      "name": "Content Explorer - Key Metrics",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "content_explorer_subject_areas",
+      "name": "Content Explorer - Subject Areas",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "content_explorer_workbooks",
+      "name": "Content Explorer - Workbooks",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_activity",
+      "name": "CX - Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_campaign_activity_analysis",
+      "name": "CX - Campaign Activity Analysis",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_campaign_activity_detail_analysis",
+      "name": "CX - Campaign Activity Detail Analysis",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_campaign_members",
+      "name": "CX - Campaign Members",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_campaign_opportunity_revenue",
+      "name": "CX - Campaign Opportunity Revenue",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_campaign_opportunity_revenue_line",
+      "name": "CX - Campaign Opportunity Revenue Line",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_ic_credits",
+      "name": "CX - IC Credits",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_ic_earnings",
+      "name": "CX - IC Earnings",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_ic_transactions",
+      "name": "CX - IC Transactions",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_lead_activity",
+      "name": "CX - Lead Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_leads",
+      "name": "CX - Leads",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity",
+      "name": "CX - Opportunity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_activity",
+      "name": "CX - Opportunity Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_quote",
+      "name": "CX - Opportunity Quote",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_quote_line",
+      "name": "CX - Opportunity Quote Line",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_revenue_line",
+      "name": "CX - Opportunity Revenue Line",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_revenue_line_prediction_snapshot",
+      "name": "CX - Opportunity Revenue Line Prediction Snapshot",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_revenue_line_snapshot",
+      "name": "CX - Opportunity Revenue Line Snapshot",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_snapshot",
+      "name": "CX - Opportunity Snapshot",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_opportunity_stage_progression",
+      "name": "CX - Opportunity Stage Progression",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_service_request",
+      "name": "CX - Service Request",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_service_request_lifecycle",
+      "name": "CX - Service Request Lifecycle",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_service_request_milestone",
+      "name": "CX - Service Request Milestone",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_subscription_bill_line",
+      "name": "CX - Subscription Bill Line",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_subscription_historical_trend",
+      "name": "CX - Subscription Historical Trend",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "cx_subscriptions",
+      "name": "CX - Subscriptions",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "enterprise_contracts_contracts",
+      "name": "Enterprise Contracts - Contracts",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_accounting_hub_transactions_template",
+      "name": "Financials - Accounting Hub Transactions Template",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_aging",
+      "name": "Financials - AP Aging",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_expense",
+      "name": "Financials - AP Expense",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_holds",
+      "name": "Financials - AP Holds",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_invoices",
+      "name": "Financials - AP Invoices",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_liabilities",
+      "name": "Financials - AP Liabilities",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ap_payments",
+      "name": "Financials - AP Payments",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_adjustments",
+      "name": "Financials - AR Adjustments",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_aging",
+      "name": "Financials - AR Aging",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_credit_memo_applications",
+      "name": "Financials - AR Credit Memo Applications",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_receipts_and_applications",
+      "name": "Financials - AR Receipts and Applications",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_revenue",
+      "name": "Financials - AR Revenue",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_ar_transactions",
+      "name": "Financials - AR Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_assets_analysis",
+      "name": "Financials - Assets Analysis",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_assets_transactions",
+      "name": "Financials - Assets Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_budgetary_control_balances",
+      "name": "Financials - Budgetary Control Balances",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_budgetary_control_transactions",
+      "name": "Financials - Budgetary Control Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_cash_management_bank_statement_balances",
+      "name": "Financials - Cash Management Bank Statement Balances",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_cash_management_bank_statements",
+      "name": "Financials - Cash Management Bank Statements",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_cash_management_external_cash_transactions",
+      "name": "Financials - Cash Management External Cash Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_exm_employee_expenses",
+      "name": "Financials - EXM Employee Expenses",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_fla_expense_lease_portfolio",
+      "name": "Financials - FLA Expense Lease Portfolio",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_fla_expense_lease_transactions",
+      "name": "Financials - FLA Expense Lease Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_account_analysis",
+      "name": "Financials - GL Account Analysis",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_account_analysis_foundation",
+      "name": "Financials - GL Account Analysis Foundation",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_account_analysis_template",
+      "name": "Financials - GL Account Analysis Template",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_balance_sheet",
+      "name": "Financials - GL Balance Sheet",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_budgets",
+      "name": "Financials - GL Budgets",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_detail_transactions",
+      "name": "Financials - GL Detail Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_gl_profitability",
+      "name": "Financials - GL Profitability",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_global_intercompany_transactions",
+      "name": "Financials - Global Intercompany Transactions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_payables_expenses_360",
+      "name": "Financials - Payables Expenses 360",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_payables_payments_all",
+      "name": "Financials - Payables Payments All",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_accounting",
+      "name": "Financials - Revenue Management Accounting",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_accounting_events",
+      "name": "Financials - Revenue Management Accounting Events",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_contracts",
+      "name": "Financials - Revenue Management Contracts",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_immaterial_changes",
+      "name": "Financials - Revenue Management Immaterial Changes",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_source_document_line_versions",
+      "name": "Financials - Revenue Management Source Document Line Versions",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_revenue_management_standalone_selling_price",
+      "name": "Financials - Revenue Management Standalone Selling Price",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "financials_supporting_reference_balances_template",
+      "name": "Financials - Supporting Reference Balances Template",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_benefits",
+      "name": "HCM - Benefits",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_check_ins",
+      "name": "HCM - Check-Ins",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_course_offering_rating_and_profile_outcome",
+      "name": "HCM - Course - Offering Rating and Profile Outcome",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_diversity_analysis",
+      "name": "HCM - Diversity Analysis",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_goals_and_career_development",
+      "name": "HCM - Goals and Career Development",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_health_and_safety_incidents",
+      "name": "HCM - Health and Safety Incidents",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_hr_help_desk_requests_overview",
+      "name": "HCM - HR Help Desk Requests Overview",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_journeys",
+      "name": "HCM - Journeys",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_learning",
+      "name": "HCM - Learning",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_learning_items_and_enrollments",
+      "name": "HCM - Learning Items and Enrollments",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_opportunity_marketplace_gigs",
+      "name": "HCM - Opportunity Marketplace Gigs",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_performance_management",
+      "name": "HCM - Performance Management",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_positions",
+      "name": "HCM - Positions",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_profile_matching",
+      "name": "HCM - Profile Matching",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_specialization_rating_and_profile_outcome",
+      "name": "HCM - Specialization Rating and Profile Outcome",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_succession_management",
+      "name": "HCM - Succession Management",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_talent_acquisition",
+      "name": "HCM - Talent Acquisition",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_talent_profile",
+      "name": "HCM - Talent Profile",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_talent_profile_marketplace",
+      "name": "HCM - Talent Profile Marketplace",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_talent_profile_trends",
+      "name": "HCM - Talent Profile Trends",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_talent_review_meetings",
+      "name": "HCM - Talent Review Meetings",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_worker_seniority",
+      "name": "HCM - Worker Seniority",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_absence_management",
+      "name": "HCM - Workforce Absence Management",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_core",
+      "name": "HCM - Workforce Core",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_gains_and_losses",
+      "name": "HCM - Workforce Gains and Losses",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_payroll_balances_monthly",
+      "name": "HCM - Workforce Rewards - Payroll Balances (Monthly)",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_payroll_costing",
+      "name": "HCM - Workforce Rewards - Payroll Costing",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_payroll_costing_aggregate",
+      "name": "HCM - Workforce Rewards - Payroll Costing (Aggregate)",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_payroll_management",
+      "name": "HCM - Workforce Rewards - Payroll Management",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_salary_basis",
+      "name": "HCM - Workforce Rewards - Salary Basis",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_salary_basis_setup",
+      "name": "HCM - Workforce Rewards - Salary Basis Setup",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_rewards_workforce_compensation",
+      "name": "HCM - Workforce Rewards - Workforce Compensation",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "hcm_workforce_time_and_labor_management",
+      "name": "HCM - Workforce Time and Labor Management",
+      "pillar": "HCM",
+      "pillars": [
+        "HCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_content_usage_insight",
+      "name": "Internal - Content Usage Insight",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_multiple_calendar_driving_dimension_for_functional_areas",
+      "name": "Internal - Multiple Calendar Driving Dimension for Functional Areas",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_multiple_calendar_driving_dimension_metadata",
+      "name": "Internal - Multiple Calendar Driving Dimension Metadata",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_multiple_calendar_driving_dimension_values",
+      "name": "Internal - Multiple Calendar Driving Dimension Values",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_multiple_calendar_dynamic_time_filters",
+      "name": "Internal - Multiple Calendar Dynamic Time Filters",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_reporting_calendar_dynamic_time_filters",
+      "name": "Internal - Reporting Calendar Dynamic Time Filters",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "internal_rpd_merge",
+      "name": "Internal - RPD Merge",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "otm_shipments",
+      "name": "OTM - Shipments",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_grants_award_funding",
+      "name": "PPM - Grants Award Funding",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_assets",
+      "name": "PPM - Project Assets",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_budgets",
+      "name": "PPM - Project Budgets",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_commitments",
+      "name": "PPM - Project Commitments",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_costs",
+      "name": "PPM - Project Costs",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_events",
+      "name": "PPM - Project Events",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_forecasts",
+      "name": "PPM - Project Forecasts",
+      "pillar": "ERP",
+      "pillars": [
+        "ERP",
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_funding",
+      "name": "PPM - Project Funding",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_invoices",
+      "name": "PPM - Project Invoices",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_labor_distribution_costs",
+      "name": "PPM - Project Labor Distribution Costs",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_labor_schedules",
+      "name": "PPM - Project Labor Schedules",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_revenue",
+      "name": "PPM - Project Revenue",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "ppm_project_time_and_labor",
+      "name": "PPM - Project Time and Labor",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_accrual_balances_at_period_end",
+      "name": "Procurement - Accrual Balances at Period End",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_accrual_balances_at_receipt",
+      "name": "Procurement - Accrual Balances at Receipt",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_agreement_change_orders",
+      "name": "Procurement - Agreement Change Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_agreements",
+      "name": "Procurement - Agreements",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_purchase_order_change_orders",
+      "name": "Procurement - Purchase Order Change Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_purchase_orders",
+      "name": "Procurement - Purchase Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_receipt_accounting",
+      "name": "Procurement - Receipt Accounting",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_receipts",
+      "name": "Procurement - Receipts",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_requisitions",
+      "name": "Procurement - Requisitions",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_sourcing_negotiations",
+      "name": "Procurement - Sourcing - Negotiations",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_sourcing_responses_and_awards",
+      "name": "Procurement - Sourcing - Responses and Awards",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_spend",
+      "name": "Procurement - Spend",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "procurement_suppliers",
+      "name": "Procurement - Suppliers",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "product_management_change_orders",
+      "name": "Product Management - Change Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "product_management_item_relationships",
+      "name": "Product Management - Item Relationships",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "product_management_item_revisions",
+      "name": "Product Management - Item Revisions",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_cogs_and_gross_margin",
+      "name": "SCM - COGS and Gross Margin",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_cost_accounting",
+      "name": "SCM - Cost Accounting",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_draft_sales_orders",
+      "name": "SCM - Draft Sales Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_draft_sales_orders_holds",
+      "name": "SCM - Draft Sales Orders Holds",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_aging",
+      "name": "SCM - Inventory Aging",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_balances",
+      "name": "SCM - Inventory Balances",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_receipts",
+      "name": "SCM - Inventory Receipts",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_transactions",
+      "name": "SCM - Inventory Transactions",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_turns",
+      "name": "SCM - Inventory Turns",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_inventory_valuations",
+      "name": "SCM - Inventory Valuations",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_item_cost",
+      "name": "SCM - Item Cost",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_maintenance_materials",
+      "name": "SCM - Maintenance Materials",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_maintenance_operation_transactions",
+      "name": "SCM - Maintenance Operation Transactions",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_maintenance_resources",
+      "name": "SCM - Maintenance Resources",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_maintenance_work_orders",
+      "name": "SCM - Maintenance Work Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_manufacturing_materials",
+      "name": "SCM - Manufacturing Materials",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_manufacturing_operation_transactions",
+      "name": "SCM - Manufacturing Operation Transactions",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_manufacturing_resources",
+      "name": "SCM - Manufacturing Resources",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_manufacturing_work_orders",
+      "name": "SCM - Manufacturing Work Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_picking_and_shipping",
+      "name": "SCM - Picking and Shipping",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_receipt_accounting",
+      "name": "SCM - Receipt Accounting",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_sales_orders",
+      "name": "SCM - Sales Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_sales_orders_holds",
+      "name": "SCM - Sales Orders Holds",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_transfer_orders",
+      "name": "SCM - Transfer Orders",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scm_work_order_costing",
+      "name": "SCM - Work Order Costing",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scp_demand_fulfillment_and_recommendations_template",
+      "name": "SCP - Demand Fulfillment and Recommendations Template",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scp_demands_supplies_and_pegging_template",
+      "name": "SCP - Demands - Supplies and Pegging Template",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scp_planning_analytics_template",
+      "name": "SCP - Planning Analytics Template",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scp_planning_exceptions_template",
+      "name": "SCP - Planning Exceptions Template",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "scp_resource_requirements_template",
+      "name": "SCP - Resource Requirements Template",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "security_assignment",
+      "name": "Security Assignment",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "security_audit_history",
+      "name": "Security Audit History",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_activity",
+      "name": "SF - Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_campaign_influence",
+      "name": "SF - Campaign Influence",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_campaign_members",
+      "name": "SF - Campaign Members",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_lead_activity",
+      "name": "SF - Lead Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_leads",
+      "name": "SF - Leads",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_opportunity",
+      "name": "SF - Opportunity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_opportunity_activity",
+      "name": "SF - Opportunity Activity",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_opportunity_historical_trend",
+      "name": "SF - Opportunity Historical Trend",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_opportunity_line_item",
+      "name": "SF - Opportunity Line Item",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_opportunity_stage_progression",
+      "name": "SF - Opportunity Stage Progression",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sf_primary_campaign_influence",
+      "name": "SF - Primary Campaign Influence",
+      "pillar": "CX",
+      "pillars": [
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "sustainability_activities",
+      "name": "Sustainability - Activities",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "tenant_metrics",
+      "name": "Tenant Metrics",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM",
+        "CX"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "wms_inbound",
+      "name": "WMS - Inbound",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "wms_inventory_onhand",
+      "name": "WMS - Inventory Onhand",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    },
+    {
+      "slug": "wms_outbound",
+      "name": "WMS - Outbound",
+      "pillar": "SCM",
+      "pillars": [
+        "SCM"
+      ],
+      "metricsCount": 0,
+      "lineageCount": 0
+    }
+  ],
+  "otbi": [
+    {
+      "slug": "absence_management_leave_donations_real_time",
+      "name": "Absence Management - Leave Donations Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_action_items_real_time",
+      "name": "Benefits - Action Items Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_billing_real_time",
+      "name": "Benefits - Billing Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_court_orders_real_time",
+      "name": "Benefits - Court Orders Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_enrollment_opportunities_real_time",
+      "name": "Benefits - Enrollment Opportunities Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_enrollments_real_time",
+      "name": "Benefits - Enrollments Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_person_information_real_time",
+      "name": "Benefits - Person Information Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_potential_life_events_real_time",
+      "name": "Benefits - Potential Life Events Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "benefits_setup_real_time",
+      "name": "Benefits - Setup Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "budgetary_control_balances_real_time",
+      "name": "Budgetary Control - Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "budgetary_control_transactions_real_time",
+      "name": "Budgetary Control - Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "cash_management_bank_statement_balances_real_time",
+      "name": "Cash Management - Bank Statement Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "cash_management_bank_statement_line_charges_real_time",
+      "name": "Cash Management - Bank Statement Line Charges Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "cash_management_bank_statements_real_time",
+      "name": "Cash Management - Bank Statements Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "cash_management_external_cash_transactions_real_time",
+      "name": "Cash Management - External Cash Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "celebrate_celebration_real_time",
+      "name": "Celebrate - Celebration Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_external_data_real_time",
+      "name": "Compensation - External Data Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_individual_compensation_real_time",
+      "name": "Compensation - Individual Compensation Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_market_data_real_time",
+      "name": "Compensation - Market Data Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_salary_details_real_time",
+      "name": "Compensation - Salary Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_salary_history_details_real_time",
+      "name": "Compensation - Salary History Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_stock_details_real_time",
+      "name": "Compensation - Stock Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_workforce_assignment_salary_history_real_time",
+      "name": "Compensation - Workforce Assignment Salary History Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_workforce_assignment_salary_real_time",
+      "name": "Compensation - Workforce Assignment Salary Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_workforce_compensation_budgets_real_time",
+      "name": "Compensation - Workforce Compensation Budgets Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "compensation_workforce_compensation_real_time",
+      "name": "Compensation - Workforce Compensation Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "costing_cogs_and_gross_margin_real_time",
+      "name": "Costing - COGS and Gross Margin Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_cost_accounting_period_close_real_time",
+      "name": "Costing - Cost Accounting Period Close Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_cost_accounting_real_time",
+      "name": "Costing - Cost Accounting Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_cost_rollup_details_real_time",
+      "name": "Costing - Cost Rollup Details Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_inventory_valuation_real_time",
+      "name": "Costing - Inventory Valuation Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_item_cost_real_time",
+      "name": "Costing - Item Cost Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_landed_costs_real_time",
+      "name": "Costing - Landed Costs  Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_overhead_rates_real_time",
+      "name": "Costing - Overhead Rates Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_receipt_accounting_period_close_real_time",
+      "name": "Costing - Receipt Accounting Period Close Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_receipt_accounting_real_time",
+      "name": "Costing - Receipt Accounting Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_resource_rates_real_time",
+      "name": "Costing - Resource Rates Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_where_used_details_real_time",
+      "name": "Costing - Where Used Details Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "costing_work_order_costs_real_time",
+      "name": "Costing - Work Order Costs Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "crm_crm_activities_with_related_activities",
+      "name": "CRM - CRM Activities with Related Activities",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_click_history",
+      "name": "CRM - CRM Click History",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interaction_activity_real_time",
+      "name": "CRM - CRM Interaction Activity Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interaction_aggregate",
+      "name": "CRM - CRM Interaction Aggregate",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interaction_lead_real_time",
+      "name": "CRM - CRM Interaction Lead Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interaction_opportunity_real_time",
+      "name": "CRM - CRM Interaction Opportunity Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interaction_service_requests_real_time",
+      "name": "CRM - CRM Interaction Service Requests Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_interactions_real_time",
+      "name": "CRM - CRM Interactions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_omni_channel_events_real_time",
+      "name": "CRM - CRM Omni Channel Events Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_reporting_performance",
+      "name": "CRM - CRM Reporting Performance",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_reporting_usage",
+      "name": "CRM - CRM Reporting Usage",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_resource_catalog_audit",
+      "name": "CRM - CRM Resource Catalog Audit",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_service_request_summary",
+      "name": "CRM - CRM Service Request Summary",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_crm_work_orders_real_time",
+      "name": "CRM - CRM Work Orders Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_marketing_web_activities",
+      "name": "CRM - Marketing Web Activities",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_sales_predictor_input",
+      "name": "CRM - Sales Predictor Input",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_sales_predictor_roi_reports",
+      "name": "CRM - Sales Predictor ROI Reports",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crm_sales_predictor_sales_estimation_analysis",
+      "name": "CRM - Sales Predictor Sales Estimation Analysis",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crmhelp_desk_case_action_plan_actions_real_time",
+      "name": "CRM/Help Desk - Case Action Plan Actions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crmhelp_desk_case_relationships_real_time",
+      "name": "CRM/Help Desk - Case Relationships Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crmhelp_desk_omni_channel_queue_resource_availability_real_time",
+      "name": "CRM/Help Desk - Omni Channel Queue Resource Availability Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "crmhelp_desk_service_request_smarttext_usages_real_time",
+      "name": "CRM/Help Desk - Service Request SmartText Usages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "data_security_incidents_real_time",
+      "name": "Data Security - Incidents Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_fulfillment_lines_real_time",
+      "name": "Distributed Order Orchestration - Fulfillment Lines Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_order_headers_real_time",
+      "name": "Distributed Order Orchestration - Order Headers Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_order_holds_real_time",
+      "name": "Distributed Order Orchestration - Order Holds Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_order_lines_real_time",
+      "name": "Distributed Order Orchestration - Order Lines Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_price_adjustments_real_time",
+      "name": "Distributed Order Orchestration - Price Adjustments Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "distributed_order_orchestration_process_instances_real_time",
+      "name": "Distributed Order Orchestration - Process Instances Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "employee_wellness_competitions_real_time",
+      "name": "Employee Wellness - Competitions Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "employee_wellness_tasks_real_time",
+      "name": "Employee Wellness - Tasks Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "employee_wellness_wellness_goals_real_time",
+      "name": "Employee Wellness - Wellness Goals Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "employee_wellness_wellness_team_goals_real_time",
+      "name": "Employee Wellness - Wellness Team Goals Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "enterprise_contracts_contracts_real_time",
+      "name": "Enterprise Contracts - Contracts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "enterprise_quality_actions_real_time",
+      "name": "Enterprise Quality Actions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "enterprise_quality_issues_real_time",
+      "name": "Enterprise Quality Issues Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "environment_health_and_safety_incidents_real_time",
+      "name": "Environment Health and Safety - Incidents Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "expenses_cash_advances_real_time",
+      "name": "Expenses - Cash Advances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "expenses_employee_expense_overview_real_time",
+      "name": "Expenses - Employee Expense Overview Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "expenses_expense_transactions_real_time",
+      "name": "Expenses - Expense Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "financials_common_module_intercompany_transactions_real_time",
+      "name": "Financials Common Module - Intercompany Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "fiscal_document_capture_transactions_real_time",
+      "name": "Fiscal Document Capture Transactions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "fiscal_document_holds_real_time",
+      "name": "Fiscal Document Holds Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "fiscal_document_item_deliveries_real_time",
+      "name": "Fiscal Document Item Deliveries Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "fixed_assets_asset_balances_real_time",
+      "name": "Fixed Assets - Asset Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "fixed_assets_asset_depreciation_real_time",
+      "name": "Fixed Assets - Asset Depreciation Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "fixed_assets_asset_transactions_real_time",
+      "name": "Fixed Assets - Asset Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_average_daily_balances_real_time",
+      "name": "General Ledger - Average Daily Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_balances_real_time",
+      "name": "General Ledger - Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_journals_real_time",
+      "name": "General Ledger - Journals Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_period_status_real_time",
+      "name": "General Ledger - Period Status Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_transactional_average_daily_balances_real_time",
+      "name": "General Ledger - Transactional Average Daily Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "general_ledger_transactional_balances_real_time",
+      "name": "General Ledger - Transactional Balances Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "hcm_alerts_real_time",
+      "name": "HCM Alerts Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "hcm_communicate_campaigns_real_time",
+      "name": "HCM Communicate - Campaigns Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "hcm_general_survey_questionnaire_real_time",
+      "name": "HCM General Survey Questionnaire Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "hcm_integrations_real_time",
+      "name": "HCM Integrations Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "help_desk_hr_help_desk_queue_resources_real_time",
+      "name": "Help Desk - HR Help Desk Queue Resources Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_help_desk_request_action_plan_actions_real_time",
+      "name": "Help Desk - HR Help Desk Request Action Plan Actions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_conversation_messages_real_time",
+      "name": "Help Desk - HR Service Request Conversation Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_lifecycle",
+      "name": "Help Desk - HR Service Request Lifecycle",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_messages_real_time",
+      "name": "Help Desk - HR Service Request Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_milestones_real_time",
+      "name": "Help Desk - HR Service Request Milestones Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_relationships_real_time",
+      "name": "Help Desk - HR Service Request Relationships Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_resource_real_time",
+      "name": "Help Desk - HR Service Request Resource Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_summary",
+      "name": "Help Desk - HR Service Request Summary",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_survey_responses_real_time",
+      "name": "Help Desk - HR Service Request Survey Responses Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_request_tags_real_time",
+      "name": "Help Desk - HR Service Request Tags Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_hr_service_requests_real_time",
+      "name": "Help Desk - HR Service Requests Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_help_desk_queue_resources_real_time",
+      "name": "Help Desk - Internal Help Desk Queue Resources Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_help_desk_request_action_plan_actions_real_time",
+      "name": "Help Desk - Internal Help Desk Request Action Plan Actions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_help_desk_request_milestones_real_time",
+      "name": "Help Desk - Internal Help Desk Request Milestones Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_conversation_messages_real_time",
+      "name": "Help Desk - Internal Service Request Conversation Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_messages_real_time",
+      "name": "Help Desk - Internal Service Request Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_relationships_real_time",
+      "name": "Help Desk - Internal Service Request Relationships Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_resource_real_time",
+      "name": "Help Desk - Internal Service Request Resource Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_summary",
+      "name": "Help Desk - Internal Service Request Summary",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_survey_responses_real_time",
+      "name": "Help Desk - Internal Service Request Survey Responses Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_request_tags_real_time",
+      "name": "Help Desk - Internal Service Request Tags Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_requests_lifecycle",
+      "name": "Help Desk - Internal Service Requests Lifecycle",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "help_desk_internal_service_requests_real_time",
+      "name": "Help Desk - Internal Service Requests Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "human_capital_management_approval_notification_archive_real_time",
+      "name": "Human Capital Management - Approval Notification Archive Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "human_capital_management_transaction_administration_real_time",
+      "name": "Human Capital Management - Transaction Administration Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "incentive_compensation_attainments_real_time",
+      "name": "Incentive Compensation - Attainments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_compensation_plan_assignments_real_time",
+      "name": "Incentive Compensation - Compensation Plan Assignments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_credits_real_time",
+      "name": "Incentive Compensation - Credits Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_disputes_real_time",
+      "name": "Incentive Compensation - Disputes Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_earning_and_attainment_summary_real_time",
+      "name": "Incentive Compensation - Earning and Attainment Summary Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_earnings_real_time",
+      "name": "Incentive Compensation - Earnings Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_balances_real_time",
+      "name": "Incentive Compensation - Participant Balances Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_compensation_plan_real_time",
+      "name": "Incentive Compensation - Participant Compensation Plan Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_detail_real_time",
+      "name": "Incentive Compensation - Participant Detail Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_interval_goals_real_time",
+      "name": "Incentive Compensation - Participant Interval Goals Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_period_goals_real_time",
+      "name": "Incentive Compensation - Participant Period Goals Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_participant_rate_table_values",
+      "name": "Incentive Compensation - Participant Rate Table Values",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_pay_group_assignments_real_time",
+      "name": "Incentive Compensation - Pay Group Assignments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_payment_plan_assignments_real_time",
+      "name": "Incentive Compensation - Payment Plan Assignments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_payments_real_time",
+      "name": "Incentive Compensation - Payments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_paysheet_summary_real_time",
+      "name": "Incentive Compensation - Paysheet Summary Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_performance_and_earnings_summary_real_time",
+      "name": "Incentive Compensation - Performance and Earnings Summary Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_rate_table_real_time",
+      "name": "Incentive Compensation - Rate Table Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_rules_real_time",
+      "name": "Incentive Compensation - Rules Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "incentive_compensation_transactions_real_time",
+      "name": "Incentive Compensation - Transactions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "innovation_management_concepts_real_time",
+      "name": "Innovation Management - Concepts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_ideas_real_time",
+      "name": "Innovation Management - Ideas Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_portfolio_cost_real_time",
+      "name": "Innovation Management - Portfolio Cost Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_portfolio_lifecycle_real_time",
+      "name": "Innovation Management - Portfolio Lifecycle Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_portfolio_resource_real_time",
+      "name": "Innovation Management - Portfolio Resource Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_portfolio_revenue_real_time",
+      "name": "Innovation Management - Portfolio Revenue Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_portfolios_real_time",
+      "name": "Innovation Management - Portfolios Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_product_portfolio_real_time",
+      "name": "Innovation Management - Product Portfolio Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_product_proposals_cash_flow_real_time",
+      "name": "Innovation Management - Product Proposals Cash Flow Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_product_proposals_real_time",
+      "name": "Innovation Management - Product Proposals Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_requirements_real_time",
+      "name": "Innovation Management - Requirements Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "innovation_management_scenario_lifecycle_real_time",
+      "name": "Innovation Management - Scenario Lifecycle Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "installed_base_customer_asset_real_time",
+      "name": "Installed Base - Customer Asset Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "installed_base_customer_asset_structure_real_time",
+      "name": "Installed Base - Customer Asset Structure Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "interfaced_fiscal_document_real_time",
+      "name": "Interfaced Fiscal Document Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_inventory_abc_real_time",
+      "name": "Inventory - Inventory ABC Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_inventory_balance_real_time",
+      "name": "Inventory - Inventory Balance Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_inventory_cycle_count_real_time",
+      "name": "Inventory - Inventory Cycle Count Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_inventory_supply_real_time",
+      "name": "Inventory - Inventory Supply Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_inventory_transactions_real_time",
+      "name": "Inventory - Inventory Transactions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "inventory_organization_real_time",
+      "name": "Inventory Organization Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "joint_venture_management_joint_venture_transactions_real_time",
+      "name": "Joint Venture Management - Joint Venture Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "knowledge_management_article_category_real_time",
+      "name": "Knowledge Management - Article Category Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_links_real_time",
+      "name": "Knowledge Management - Article Links Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_product_real_time",
+      "name": "Knowledge Management - Article Product Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_rating_real_time",
+      "name": "Knowledge Management - Article Rating Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_real_time",
+      "name": "Knowledge Management - Article Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_references_real_time",
+      "name": "Knowledge Management - Article References Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_search_historical",
+      "name": "Knowledge Management - Article Search Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_search_question_tokens_historical",
+      "name": "Knowledge Management - Article Search Question Tokens Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_search_questions_historical",
+      "name": "Knowledge Management - Article Search Questions Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_suggestions_real_time",
+      "name": "Knowledge Management - Article Suggestions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_summary_historical",
+      "name": "Knowledge Management - Article Summary Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_user_group_real_time",
+      "name": "Knowledge Management - Article User Group Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "knowledge_management_article_workflows_historical",
+      "name": "Knowledge Management - Article Workflows Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_member_status_real_time",
+      "name": "Loyalty - Member Status Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_member_tier_real_time",
+      "name": "Loyalty - Member Tier Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_members_real_time",
+      "name": "Loyalty - Members Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_membership_trend_real_time",
+      "name": "Loyalty - Membership Trend Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_partner_point_usage_real_time",
+      "name": "Loyalty - Partner Point Usage Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_point_balances_real_time",
+      "name": "Loyalty - Point Balances Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_transactions_real_time",
+      "name": "Loyalty - Transactions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_voucher_status_trend_real_time",
+      "name": "Loyalty - Voucher Status Trend Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "loyalty_vouchers_real_time",
+      "name": "Loyalty - Vouchers Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "maintenance_management_asset_real_time",
+      "name": "Maintenance Management - Asset Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "maintenance_management_material_usage_real_time",
+      "name": "Maintenance Management - Material Usage Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "maintenance_management_resource_usage_real_time",
+      "name": "Maintenance Management - Resource Usage Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "maintenance_management_work_order_performance_real_time",
+      "name": "Maintenance Management - Work Order Performance Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "manufacturing_actual_production_real_time",
+      "name": "Manufacturing - Actual Production Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "manufacturing_material_usage_real_time",
+      "name": "Manufacturing - Material Usage Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "manufacturing_production_exceptions_real_time",
+      "name": "Manufacturing - Production Exceptions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "manufacturing_resource_usage_real_time",
+      "name": "Manufacturing - Resource Usage Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "manufacturing_work_order_performance_real_time",
+      "name": "Manufacturing - Work Order Performance Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "marketing_crm_b2b_customers",
+      "name": "Marketing - CRM B2B Customers",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_b2c_customers",
+      "name": "Marketing - CRM B2C Customers",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_campaign_launch",
+      "name": "Marketing - CRM Campaign Launch",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_campaign_performance",
+      "name": "Marketing - CRM Campaign Performance",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_campaigns_and_contacts_real_time",
+      "name": "Marketing - CRM Campaigns and Contacts Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_campaigns_and_leads_real_time",
+      "name": "Marketing - CRM Campaigns and Leads Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_campaigns_and_opportunities_real_time",
+      "name": "Marketing - CRM Campaigns and Opportunities Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_lead_to_order",
+      "name": "Marketing - CRM Lead to Order",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_leads",
+      "name": "Marketing - CRM Leads",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_leads_and_opportunities_real_time",
+      "name": "Marketing - CRM Leads and Opportunities Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_crm_leads_real_time",
+      "name": "Marketing - CRM Leads Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_activities",
+      "name": "Marketing Segmentation Activities",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_agreements",
+      "name": "Marketing Segmentation Agreements",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_assets",
+      "name": "Marketing Segmentation Assets",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_cache_and_saved_results",
+      "name": "Marketing Segmentation Cache and Saved Results",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_campaigns",
+      "name": "Marketing Segmentation Campaigns",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_customer_classifications",
+      "name": "Marketing Segmentation Customer Classifications",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_leads",
+      "name": "Marketing Segmentation Leads",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_opportunities",
+      "name": "Marketing Segmentation Opportunities",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_responses",
+      "name": "Marketing Segmentation Responses",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_sales_accounts",
+      "name": "Marketing Segmentation Sales Accounts",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "marketing_segmentation_targets",
+      "name": "Marketing Segmentation Targets",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "otbi_hcm_prompts",
+      "name": "OTBI HCM Prompts",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "otbi_performance_real_time",
+      "name": "OTBI Performance Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "otbi_usage_real_time",
+      "name": "OTBI Usage Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "partners_crm_leads_and_opportunities_real_time",
+      "name": "Partners - CRM Leads and Opportunities Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_opportunities_and_products_real_time",
+      "name": "Partners - CRM Opportunities and Products Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_assessments",
+      "name": "Partners - CRM Partner Assessments",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_classification",
+      "name": "Partners - CRM Partner Classification",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_contact",
+      "name": "Partners - CRM Partner Contact",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_overview",
+      "name": "Partners - CRM Partner Overview",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_program_benefits",
+      "name": "Partners - CRM Partner Program Benefits",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_program_tiers",
+      "name": "Partners - CRM Partner Program Tiers",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_programs",
+      "name": "Partners - CRM Partner Programs",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_resource",
+      "name": "Partners - CRM Partner Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partner_territory",
+      "name": "Partners - CRM Partner Territory",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_partners_and_products_real_time",
+      "name": "Partners - CRM Partners and Products Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_program_enrollments",
+      "name": "Partners - CRM Program Enrollments",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_programs",
+      "name": "Partners - CRM Programs",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "partners_crm_registered_leads_real_time",
+      "name": "Partners - CRM Registered Leads Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "payables_invoices_installments_real_time",
+      "name": "Payables Invoices - Installments Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_invoices_prepayment_applications_real_time",
+      "name": "Payables Invoices - Prepayment Applications Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_invoices_transactions_real_time",
+      "name": "Payables Invoices - Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_invoices_trial_balance_real_time",
+      "name": "Payables Invoices - Trial Balance Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_invoices_withholding_real_time",
+      "name": "Payables Invoices - Withholding Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_payments_disbursements_real_time",
+      "name": "Payables Payments - Disbursements Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payables_payments_payment_history_real_time",
+      "name": "Payables Payments - Payment History Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "payroll_calculation_cards_real_time",
+      "name": "Payroll - Calculation Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_element_entries_history_real_time",
+      "name": "Payroll - Element Entries History Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_element_entries_real_time",
+      "name": "Payroll - Element Entries Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payments_costing_real_time",
+      "name": "Payroll - Payments Costing Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payments_distribution_real_time",
+      "name": "Payroll - Payments Distribution Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_activity_center_real_time",
+      "name": "Payroll - Payroll Activity Center Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_balances_real_time",
+      "name": "Payroll - Payroll Balances Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_costing_setup_details_real_time",
+      "name": "Payroll - Payroll Costing Setup Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_flows_real_time",
+      "name": "Payroll - Payroll Flows Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_interface_inbound_records_real_time",
+      "name": "Payroll - Payroll Interface Inbound Records Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_run_costing_real_time",
+      "name": "Payroll - Payroll Run Costing Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_payroll_run_results_real_time",
+      "name": "Payroll - Payroll Run Results Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_personal_payment_details_real_time",
+      "name": "Payroll - Personal Payment Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_rate_calculation_results_real_time",
+      "name": "Payroll - Rate Calculation Results Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_retroactive_pay_real_time",
+      "name": "Payroll - Retroactive Pay Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "payroll_user_defined_tables_real_time",
+      "name": "Payroll - User-Defined Tables Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "procurement_implemented_change_orders_real_time",
+      "name": "Procurement - Implemented Change Orders Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_pending_change_orders_real_time",
+      "name": "Procurement - Pending Change Orders Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_procure_to_pay_real_time",
+      "name": "Procurement - Procure To Pay Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_purchasing_agreements_real_time",
+      "name": "Procurement - Purchasing Agreements Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_purchasing_real_time",
+      "name": "Procurement - Purchasing Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_requisitions_real_time",
+      "name": "Procurement - Requisitions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "procurement_spend_real_time",
+      "name": "Procurement - Spend Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_genealogy_genealogy_instance_real_time",
+      "name": "Product Genealogy - Genealogy Instance Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_genealogy_genealogy_structure_real_time",
+      "name": "Product Genealogy - Genealogy Structure Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_genealogy_genealogy_transaction_real_time",
+      "name": "Product Genealogy - Genealogy Transaction Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_change_order_line_real_time",
+      "name": "Product Management - Change Order Line Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_change_order_real_time",
+      "name": "Product Management - Change Order Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_components_real_time",
+      "name": "Product Management - Components Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_cross_reference_item_real_time",
+      "name": "Product Management - Cross Reference Item Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_item_revisions_real_time",
+      "name": "Product Management - Item Revisions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_item_supplier_uploads_real_time",
+      "name": "Product Management - Item Supplier Uploads Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_new_item_request_line_real_time",
+      "name": "Product Management - New Item Request Line Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_new_item_request_real_time",
+      "name": "Product Management - New Item Request Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_organization_hierarchy_real_time",
+      "name": "Product Management - Organization Hierarchy Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_related_item_real_time",
+      "name": "Product Management - Related Item Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_source_system_item_real_time",
+      "name": "Product Management - Source System Item Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_structures_and_components_real_time",
+      "name": "Product Management - Structures and Components Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_structures_real_time",
+      "name": "Product Management - Structures Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_trading_partner_item_real_time",
+      "name": "Product Management - Trading Partner Item Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "product_management_where_used_real_time",
+      "name": "Product Management - Where Used Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "project_billing_bill_transactions_real_time",
+      "name": "Project Billing - Bill Transactions Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_billing_event_real_time",
+      "name": "Project Billing - Event Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_billing_funding_real_time",
+      "name": "Project Billing - Funding Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_billing_invoices_real_time",
+      "name": "Project Billing - Invoices Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_billing_revenue_real_time",
+      "name": "Project Billing - Revenue Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_control_budgets_real_time",
+      "name": "Project Control - Budgets Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_control_financial_project_plans_real_time",
+      "name": "Project Control - Financial Project Plans Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_control_forecasts_real_time",
+      "name": "Project Control - Forecasts Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_control_progress_real_time",
+      "name": "Project Control - Progress Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_costing_actual_costs_real_time",
+      "name": "Project Costing - Actual Costs Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_costing_assets_real_time",
+      "name": "Project Costing - Assets Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_costing_commitments_real_time",
+      "name": "Project Costing - Commitments Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_costing_expenditure_item_performance_real_time",
+      "name": "Project Costing - Expenditure Item Performance - Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_costing_unprocessed_transactions_real_time",
+      "name": "Project Costing - Unprocessed Transactions Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_baseline_versions_real_time",
+      "name": "Project Management - Baseline Versions Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_change_management_real_time",
+      "name": "Project Management - Change Management Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_opportunity_integration_real_time",
+      "name": "Project Management - Opportunity Integration Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_planning_real_time",
+      "name": "Project Management - Planning Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_project_hierarchy_real_time",
+      "name": "Project Management - Project Hierarchy Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_project_issues_real_time",
+      "name": "Project Management - Project Issues Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_project_resources_real_time",
+      "name": "Project Management - Project Resources Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_project_work_items_real_time",
+      "name": "Project Management - Project Work Items Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_requirements_real_time",
+      "name": "Project Management - Requirements Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_management_task_management_real_time",
+      "name": "Project Management - Task Management Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_resource_management_resource_management_real_time",
+      "name": "Project Resource Management - Resource Management Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "project_resource_management_resource_pool_real_time",
+      "name": "Project Resource Management - Resource Pool Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_billing_and_revenue_exceptions_real_time",
+      "name": "Projects - Billing and Revenue Exceptions Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_cross_subject_area_analysis_real_time",
+      "name": "Projects - Cross Subject Area Analysis - Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_funding_pattern_analysis_real_time",
+      "name": "Projects - Funding Pattern Analysis Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_grants_management_award_analysis_real_time",
+      "name": "Projects - Grants Management - Award Analysis Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_grants_management_award_funding_real_time",
+      "name": "Projects - Grants Management - Award Funding Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_labor_distribution_cost_analysis_real_time",
+      "name": "Projects - Labor Distribution Cost Analysis Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_labor_schedule_analysis_real_time",
+      "name": "Projects - Labor Schedule Analysis Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_performance_reporting_real_time",
+      "name": "Projects - Performance Reporting Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_period_close_exceptions",
+      "name": "Projects - Period Close Exceptions",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "projects_program_performance_reporting_real_time",
+      "name": "Projects - Program Performance Reporting Real Time",
+      "sourceTable": "\"OTBI-Project\""
+    },
+    {
+      "slug": "quality_inspection_results_real_time",
+      "name": "Quality Inspection Results Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receivables_adjustments_real_time",
+      "name": "Receivables - Adjustments Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_bills_receivable_real_time",
+      "name": "Receivables - Bills Receivable Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_credit_memo_applications_real_time",
+      "name": "Receivables - Credit Memo Applications Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_credit_memo_requests_real_time",
+      "name": "Receivables - Credit Memo Requests Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_customer_account_site_tax_profile_real_time",
+      "name": "Receivables - Customer Account Site Tax Profile Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_customer_real_time",
+      "name": "Receivables - Customer Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_customer_tax_profile_real_time",
+      "name": "Receivables - Customer Tax Profile Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_miscellaneous_receipts_real_time",
+      "name": "Receivables - Miscellaneous Receipts Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_payment_schedules_real_time",
+      "name": "Receivables - Payment Schedules Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_receipt_conversion_rate_adjustments_real_time",
+      "name": "Receivables - Receipt Conversion Rate Adjustments Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_receipts_details_real_time",
+      "name": "Receivables - Receipts Details Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_revenue_adjustments_real_time",
+      "name": "Receivables - Revenue Adjustments Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_standard_receipts_application_details_real_time",
+      "name": "Receivables - Standard Receipts Application Details Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receivables_transactions_real_time",
+      "name": "Receivables - Transactions Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "receiving_in_transit_advanced_shipment_notifications_real_time",
+      "name": "Receiving - In-Transit Advanced Shipment Notifications Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_in_transit_interorganization_inventory_transfers_real_time",
+      "name": "Receiving - In-Transit Interorganization Inventory Transfers Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_in_transit_shipments_real_time",
+      "name": "Receiving - In-Transit Shipments Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_interorganization_receipts_real_time",
+      "name": "Receiving - Interorganization Receipts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_purchase_receipts_real_time",
+      "name": "Receiving - Purchase Receipts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_receipts_real_time",
+      "name": "Receiving - Receipts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_transactions_real_time",
+      "name": "Receiving - Transactions Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "receiving_unordered_receipts_real_time",
+      "name": "Receiving - Unordered Receipts Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "recruiting_candidate_tracking_real_time",
+      "name": "Recruiting - Candidate Tracking Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_hiring_events_real_time",
+      "name": "Recruiting - Hiring Events Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_opportunity_marketplace_real_time",
+      "name": "Recruiting - Opportunity Marketplace Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_recruiting_events_real_time",
+      "name": "Recruiting - Recruiting Events Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_recruiting_real_time",
+      "name": "Recruiting - Recruiting Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_setup_details_real_time",
+      "name": "Recruiting - Setup Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "recruiting_sourcing_real_time",
+      "name": "Recruiting - Sourcing Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "revenue_management_customer_contracts_real_time",
+      "name": "Revenue Management - Customer Contracts Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "revenue_management_standalone_selling_price_real_time",
+      "name": "Revenue Management - Standalone Selling Price Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "sales_crm_account_relationship",
+      "name": "Sales - CRM Account Relationship",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_activity_contact",
+      "name": "Sales - CRM Activity Contact",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_activity_objective",
+      "name": "Sales - CRM Activity Objective",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_activity_resource",
+      "name": "Sales - CRM Activity Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_all_contacts_addresses",
+      "name": "Sales - CRM All Contacts Addresses",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_all_contacts_contact_point",
+      "name": "Sales - CRM All Contacts Contact Point",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_asset",
+      "name": "Sales - CRM Asset",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_asset_contact",
+      "name": "Sales - CRM Asset Contact",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_asset_resource",
+      "name": "Sales - CRM Asset Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_business_plan_objective_split",
+      "name": "Sales - CRM Business Plan Objective Split",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_campaign_members",
+      "name": "Sales - CRM Campaign Members",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_campaign_opportunity",
+      "name": "Sales - CRM Campaign Opportunity",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_contact_note",
+      "name": "Sales - CRM Contact Note",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_contact_relationship",
+      "name": "Sales - CRM Contact Relationship",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_contact_resource",
+      "name": "Sales - CRM Contact Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_contacts",
+      "name": "Sales - CRM Contacts",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_customer_classification",
+      "name": "Sales - CRM Customer Classification",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_customer_note",
+      "name": "Sales - CRM Customer Note",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_customer_overview",
+      "name": "Sales - CRM Customer Overview",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_customers",
+      "name": "Sales - CRM Customers",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_customers_and_contacts_real_time",
+      "name": "Sales - CRM Customers and Contacts Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_deal_registration",
+      "name": "Sales - CRM Deal Registration",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_deal_registration_product",
+      "name": "Sales - CRM Deal Registration Product",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_forecasting",
+      "name": "Sales - CRM Forecasting",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_forecasting_and_pipeline_revenue_real_time",
+      "name": "Sales - CRM Forecasting and Pipeline Revenue Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_historical_forecasting",
+      "name": "Sales - CRM Historical Forecasting",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_historical_pipeline",
+      "name": "Sales - CRM Historical Pipeline",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_lead_assessments",
+      "name": "Sales - CRM Lead Assessments",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_lead_contact",
+      "name": "Sales - CRM Lead Contact",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_lead_product",
+      "name": "Sales - CRM Lead Product",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_lead_resource",
+      "name": "Sales - CRM Lead Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_lead_territory",
+      "name": "Sales - CRM Lead Territory",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_mdf_budget",
+      "name": "Sales - CRM MDF Budget",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_mdf_claim",
+      "name": "Sales - CRM MDF Claim",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_mdf_claim_settlement",
+      "name": "Sales - CRM MDF Claim Settlement",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_mdf_request",
+      "name": "Sales - CRM MDF Request",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_object_activity",
+      "name": "Sales - CRM Object Activity",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunities_and_products_real_time",
+      "name": "Sales - CRM Opportunities and Products Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_assessments",
+      "name": "Sales - CRM Opportunity Assessments",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_campaign",
+      "name": "Sales - CRM Opportunity Campaign",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_contact",
+      "name": "Sales - CRM Opportunity Contact",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_note",
+      "name": "Sales - CRM Opportunity Note",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_partner",
+      "name": "Sales - CRM Opportunity Partner",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_resource",
+      "name": "Sales - CRM Opportunity Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_sales_stage_snapshot",
+      "name": "Sales - CRM Opportunity Sales Stage Snapshot",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_opportunity_territory",
+      "name": "Sales - CRM Opportunity Territory",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_partner_business_plan",
+      "name": "Sales - CRM Partner Business Plan",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_partner_relationship",
+      "name": "Sales - CRM Partner Relationship",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_pipeline",
+      "name": "Sales - CRM Pipeline",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_primary_contact_addresses",
+      "name": "Sales - CRM Primary Contact Addresses",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_primary_contact_contact_point",
+      "name": "Sales - CRM Primary Contact Contact Point",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_quota_management",
+      "name": "Sales - CRM Quota Management",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_quote_lines",
+      "name": "Sales - CRM Quote Lines",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_quotes",
+      "name": "Sales - CRM Quotes",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_resource",
+      "name": "Sales - CRM Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_resource_system_usage",
+      "name": "Sales - CRM Resource System Usage",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_resource_territory",
+      "name": "Sales - CRM Resource Territory",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_sales_account_assessments",
+      "name": "Sales - CRM Sales Account Assessments",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_sales_account_resource",
+      "name": "Sales - CRM Sales Account Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_sales_account_territory",
+      "name": "Sales - CRM Sales Account Territory",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_sales_activity",
+      "name": "Sales - CRM Sales Activity",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_crm_territory_resource",
+      "name": "Sales - CRM Territory Resource",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_resource_sales_forecast",
+      "name": "Sales - Resource Sales Forecast",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "sales_territory_sales_forecast",
+      "name": "Sales - Territory Sales Forecast",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "security_audit_real_time",
+      "name": "Security - Audit Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "security_roles_and_privileges_real_time",
+      "name": "Security - Roles and Privileges Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "service_crm_case_management_real_time",
+      "name": "Service - CRM Case Management Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_customer_coverage_real_time",
+      "name": "Service - CRM Customer Coverage Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_inbound_messages_real_time",
+      "name": "Service - CRM Inbound Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_queue_resources_real_time",
+      "name": "Service - CRM Service Queue Resources Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_action_plan_actions_real_time",
+      "name": "Service - CRM Service Request Action Plan Actions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_conversation_messages_real_time",
+      "name": "Service - CRM Service Request Conversation Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_lifecycle",
+      "name": "Service - CRM Service Request Lifecycle",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_messages_real_time",
+      "name": "Service - CRM Service Request Messages Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_milestones_real_time",
+      "name": "Service - CRM Service Request Milestones Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_relationships_real_time",
+      "name": "Service - CRM Service Request Relationships Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_resource_real_time",
+      "name": "Service - CRM Service Request Resource Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_request_tags_real_time",
+      "name": "Service - CRM Service Request Tags Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_service_requests_real_time",
+      "name": "Service - CRM Service Requests Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_social_post_real_time",
+      "name": "Service - CRM Social Post Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_survey_requests_real_time",
+      "name": "Service - CRM Survey Requests Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "service_crm_survey_responses_real_time",
+      "name": "Service - CRM Survey Responses Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "shipping_real_time",
+      "name": "Shipping Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "sourcing_program_real_time",
+      "name": "Sourcing - Program Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "sourcing_supplier_awards_real_time",
+      "name": "Sourcing - Supplier Awards Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "sourcing_supplier_negotiations_real_time",
+      "name": "Sourcing - Supplier Negotiations Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "sourcing_supplier_responses_real_time",
+      "name": "Sourcing - Supplier Responses Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "subledger_accounting_journals_real_time",
+      "name": "Subledger Accounting - Journals Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "subledger_accounting_payables_summary_reconciliation_real_time",
+      "name": "Subledger Accounting - Payables Summary Reconciliation Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "subledger_accounting_receivables_summary_reconciliation_real_time",
+      "name": "Subledger Accounting - Receivables Summary Reconciliation Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "subledger_accounting_supporting_references_real_time",
+      "name": "Subledger Accounting - Supporting References Real Time",
+      "sourceTable": "\"OTBI-Finance\""
+    },
+    {
+      "slug": "subscription_management_associated_assets_real_time",
+      "name": "Subscription Management - Associated Assets Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_cohort_retention_historical",
+      "name": "Subscription Management - Cohort Retention Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_coverage_entitlements_and_adjustments_real_time",
+      "name": "Subscription Management - Coverage Entitlements and Adjustments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_covered_levels_real_time",
+      "name": "Subscription Management - Covered Levels Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_customer_cohort_details_historical",
+      "name": "Subscription Management - Customer Cohort Details Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_customer_cohort_trends_historical",
+      "name": "Subscription Management - Customer Cohort Trends Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_customer_trends_historical",
+      "name": "Subscription Management - Customer Trends Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_product_trends_historical",
+      "name": "Subscription Management - Product Trends Historical",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_subscription_billing_adjustments_real_time",
+      "name": "Subscription Management - Subscription Billing Adjustments Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_subscription_billing_real_time",
+      "name": "Subscription Management - Subscription Billing Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_subscription_relationships_real_time",
+      "name": "Subscription Management - Subscription Relationships Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "subscription_management_subscriptions_real_time",
+      "name": "Subscription Management - Subscriptions Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "supplier_supplier_real_time",
+      "name": "Supplier - Supplier Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_import_supplier_real_time",
+      "name": "Supplier Import - Supplier Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_portal_invoice_real_time",
+      "name": "Supplier Portal - Invoice Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_portal_purchasing_real_time",
+      "name": "Supplier Portal - Purchasing Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_qualification_qualifications_and_assessments_real_time",
+      "name": "Supplier Qualification - Qualifications and Assessments Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_qualification_question_responses_real_time",
+      "name": "Supplier Qualification - Question Responses Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supplier_registration_real_time",
+      "name": "Supplier Registration - Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supply_chain_collaboration_supply_planning_real_time",
+      "name": "Supply Chain Collaboration - Supply Planning Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "supply_chain_planning_real_time",
+      "name": "Supply Chain Planning Real Time",
+      "sourceTable": "\"OTBI-SCM\""
+    },
+    {
+      "slug": "territory_management_crm_forecast",
+      "name": "Territory Management - CRM Forecast",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "territory_management_crm_leads",
+      "name": "Territory Management - CRM Leads",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "territory_management_crm_pipeline",
+      "name": "Territory Management - CRM Pipeline",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "territory_management_crm_quota",
+      "name": "Territory Management - CRM Quota",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "territory_management_crm_sales_accounts",
+      "name": "Territory Management - CRM Sales Accounts",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "usage_catalog_audit_real_time",
+      "name": "Usage - Catalog Audit Real Time",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "user_system_usage",
+      "name": "User System Usage",
+      "sourceTable": "\"OTBI-CX\""
+    },
+    {
+      "slug": "volunteering_organizations_real_time",
+      "name": "Volunteering - Organizations Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "volunteering_participants_real_time",
+      "name": "Volunteering - Participants Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "volunteering_projects_real_time",
+      "name": "Volunteering - Projects Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_career_development_development_goal_overview_real_time",
+      "name": "Workforce Career Development - Development Goal Overview Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_goals_goal_alignments_real_time",
+      "name": "Workforce Goals - Goal Alignments Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_goals_goal_plan_assignments_real_time",
+      "name": "Workforce Goals - Goal Plan Assignments Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_goals_goal_status_overview_real_time",
+      "name": "Workforce Goals - Goal Status Overview Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_goals_goal_tasks_real_time",
+      "name": "Workforce Goals - Goal Tasks Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_goals_target_outcomes_real_time",
+      "name": "Workforce Goals - Target Outcomes Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_learning_learning_content_items_real_time",
+      "name": "Workforce Learning - Learning Content Items Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_learning_learning_management_real_time",
+      "name": "Workforce Learning - Learning Management Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_learning_learning_records_real_time",
+      "name": "Workforce Learning - Learning Records Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_absence_calendar_details_real_time",
+      "name": "Workforce Management - Absence Calendar Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_absence_entitlement_case_real_time",
+      "name": "Workforce Management - Absence Entitlement Case Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_absence_real_time",
+      "name": "Workforce Management - Absence Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_absence_shift_details_real_time",
+      "name": "Workforce Management - Absence Shift Details Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_accrual_real_time",
+      "name": "Workforce Management - Accrual Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_areas_of_responsibility",
+      "name": "Workforce Management - Areas of Responsibility",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_assignment_action_occurrence_real_time",
+      "name": "Workforce Management - Assignment Action Occurrence Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_change_audit_reported_time_cards_real_time",
+      "name": "Workforce Management - Change Audit Reported Time Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_checklist_real_time",
+      "name": "Workforce Management - Checklist Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_document_records_mass_download_history_real_time",
+      "name": "Workforce Management - Document Records Mass Download History Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_documents_of_record_archive_real_time",
+      "name": "Workforce Management - Documents of Record Archive Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_documents_of_record_real_time",
+      "name": "Workforce Management - Documents of Record Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_eligible_jobs_real_time",
+      "name": "Workforce Management - Eligible Jobs Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_employment_contract_real_time",
+      "name": "Workforce Management - Employment Contract Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_grade_rate_real_time",
+      "name": "Workforce Management - Grade Rate Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_guided_journey_responses_real_time",
+      "name": "Workforce Management - Guided Journey Responses Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_historical_processed_time_cards_real_time",
+      "name": "Workforce Management - Historical Processed Time Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_historical_reported_time_cards_real_time",
+      "name": "Workforce Management - Historical Reported Time Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_leave_donation_recipients_real_time",
+      "name": "Workforce Management - Leave Donation Recipients Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_person_real_time",
+      "name": "Workforce Management - Person Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_person_seniority_real_time",
+      "name": "Workforce Management - Person Seniority Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_planned_schedules_real_time",
+      "name": "Workforce Management - Planned Schedules Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_position_budget_real_time",
+      "name": "Workforce Management - Position Budget Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_position_real_time",
+      "name": "Workforce Management - Position Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_position_trend_real_time",
+      "name": "Workforce Management - Position Trend Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_processed_time_cards_real_time",
+      "name": "Workforce Management - Processed Time Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_published_schedules_real_time",
+      "name": "Workforce Management - Published Schedules Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_reported_time_cards_real_time",
+      "name": "Workforce Management - Reported Time Cards Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_scheduler_profiles_real_time",
+      "name": "Workforce Management - Scheduler Profiles Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_sensitive_data_access_audit_real_time",
+      "name": "Workforce Management - Sensitive Data Access Audit Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_setup_objects_and_profiles_real_time",
+      "name": "Workforce Management - Setup Objects and Profiles Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_share_data_access_real_time",
+      "name": "Workforce Management - Share Data Access Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_survey_journey_responses_real_time",
+      "name": "Workforce Management - Survey Journey Responses Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_time_change_requests_real_time",
+      "name": "Workforce Management - Time Change Requests Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_time_collection_devices_real_time",
+      "name": "Workforce Management - Time Collection Devices Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_work_relationship_real_time",
+      "name": "Workforce Management - Work Relationship Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_worker_assignment_event_real_time",
+      "name": "Workforce Management - Worker Assignment Event Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_worker_assignment_real_time",
+      "name": "Workforce Management - Worker Assignment Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_worker_attendance_violations_real_time",
+      "name": "Workforce Management - Worker Attendance Violations Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_worker_compliance_results_real_time",
+      "name": "Workforce Management - Worker Compliance Results Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_workforce_management_rule_set_setup_real_time",
+      "name": "Workforce Management - Workforce Management Rule Set Setup Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_workforce_modeling_real_time",
+      "name": "Workforce Management - Workforce Modeling Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_management_workforce_trend_real_time",
+      "name": "Workforce Management - Workforce Trend Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_check_in_eligibility_real_time",
+      "name": "Workforce Performance - Check-In Eligibility Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_check_in_real_time",
+      "name": "Workforce Performance - Performance Check-In Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_document_eligibility_real_time",
+      "name": "Workforce Performance - Performance Document Eligibility Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_document_status_real_time",
+      "name": "Workforce Performance - Performance Document Status Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_rating_distribution_real_time",
+      "name": "Workforce Performance - Performance Rating Distribution Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_rating_real_time",
+      "name": "Workforce Performance - Performance Rating Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_performance_task_status_real_time",
+      "name": "Workforce Performance - Performance Task Status Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_performance_requested_feedback_real_time",
+      "name": "Workforce Performance - Requested Feedback Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_profiles_feedback_notes_by_recipient_real_time",
+      "name": "Workforce Profiles - Feedback Notes by Recipient Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_profiles_library_objects_real_time",
+      "name": "Workforce Profiles - Library Objects Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_profiles_model_profile_real_time",
+      "name": "Workforce Profiles - Model Profile Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_profiles_person_profile_real_time",
+      "name": "Workforce Profiles - Person Profile Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_schedule_coverage_real_time",
+      "name": "Workforce Scheduling - Schedule Coverage Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_schedule_generation_profile_setup_real_time",
+      "name": "Workforce Scheduling - Schedule Generation Profile Setup Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_scheduling_volumes_real_time",
+      "name": "Workforce Scheduling - Scheduling Volumes Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_work_pattern_real_time",
+      "name": "Workforce Scheduling - Work Pattern Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_worker_shift_changes_and_requests_real_time",
+      "name": "Workforce Scheduling - Worker Shift Changes and Requests Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_workforce_schedule_real_time",
+      "name": "Workforce Scheduling - Workforce Schedule Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_workforce_schedule_validation_real_time",
+      "name": "Workforce Scheduling - Workforce Schedule Validation Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_workload_consolidation_real_time",
+      "name": "Workforce Scheduling - Workload Consolidation Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_scheduling_workload_real_time",
+      "name": "Workforce Scheduling - Workload Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_incumbent_plans_real_time",
+      "name": "Workforce Succession Management - Incumbent Plans Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_job_plans_real_time",
+      "name": "Workforce Succession Management - Job Plans Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_plan_candidates_real_time",
+      "name": "Workforce Succession Management - Plan Candidates Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_position_plans_real_time",
+      "name": "Workforce Succession Management - Position Plans Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_succession_plan_history_real_time",
+      "name": "Workforce Succession Management - Succession Plan History Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_succession_management_talent_pools_real_time",
+      "name": "Workforce Succession Management - Talent Pools Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_talent_review_talent_review_meeting_real_time",
+      "name": "Workforce Talent Review - Talent Review Meeting Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    },
+    {
+      "slug": "workforce_talent_review_talent_review_tasks_real_time",
+      "name": "Workforce Talent Review - Talent Review Tasks Real Time",
+      "sourceTable": "\"OTBI-HCM\""
+    }
+  ]
+}
