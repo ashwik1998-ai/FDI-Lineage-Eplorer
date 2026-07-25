@@ -346,55 +346,18 @@ export default function App() {
   const processedNodes = useMemo(() => {
     if (workspace === 'otbi') {
       if (!selectedOtbiTable) return [];
-
-      const pvosSet = new Set(
-        mappings.filter(m => m.presentationTable === selectedOtbiTable).map(m => m.pvoName)
-      );
-
-      const result = [];
       const presRaw = nodes.find(n => n.id === selectedOtbiTable);
-      const pvoCount = pvosSet.size;
-      const presY = Math.max(0, (pvoCount * 140 - (presRaw?.data?.columns?.length || 0) * 22) / 2);
-
-      result.push({
+      return [{
         id: selectedOtbiTable,
         type: 'tableNode',
-        position: { x: 0, y: presY },
+        position: { x: 150, y: 40 },
         data: {
           ...(presRaw?.data || { label: selectedOtbiTable, type: 'Presentation Table', columns: [] }),
           label: selectedOtbiTable,
           activeColumn: activeColumn?.tableId === selectedOtbiTable ? activeColumn.colName : null,
           onColumnClick: (col) => handleColumnClick(selectedOtbiTable, col),
         }
-      });
-
-      let yIdx = 0;
-      pvosSet.forEach(pvoId => {
-        const pvoRaw = nodes.find(n => n.id === pvoId);
-        const fallbackCols = [...new Set(mappings.filter(m => m.pvoName === pvoId && m.presentationTable === selectedOtbiTable).map(m => m.pvoAttribute))];
-
-        result.push({
-          id: pvoId,
-          type: 'tableNode',
-          position: { x: 620, y: yIdx * 140 },
-          data: {
-            ...(pvoRaw?.data || { label: pvoId, type: 'Physical Table', columns: fallbackCols, isExtensible: false }),
-            label: pvoId,
-            activeColumn: activeColumn
-              ? mappings.find(m => m.pvoName === pvoId && m.presentationTable === selectedOtbiTable &&
-                  (m.presentationColumn === activeColumn.colName || m.pvoAttribute === activeColumn.colName))
-                ? activeColumn.tableId !== selectedOtbiTable
-                  ? mappings.find(m => m.pvoName === pvoId && m.pvoAttribute === activeColumn.colName)?.pvoAttribute
-                  : mappings.find(m => m.pvoName === pvoId && m.presentationColumn === activeColumn.colName)?.pvoAttribute
-                : null
-              : null,
-            onColumnClick: (col) => handleColumnClick(pvoId, col),
-          }
-        });
-        yIdx++;
-      });
-
-      return result;
+      }];
     }
 
     if (!selectedPresTable) return [];
@@ -455,47 +418,7 @@ export default function App() {
   // ── Build processedEdges ──────────────────────────────────────────────────────
   const processedEdges = useMemo(() => {
     if (workspace === 'otbi') {
-      if (!selectedOtbiTable) return [];
-
-      const pvosSet = new Set(
-        mappings.filter(m => m.presentationTable === selectedOtbiTable).map(m => m.pvoName)
-      );
-
-      if (activeColumn) {
-        let activeMappings;
-        if (activeColumn.tableId === selectedOtbiTable) {
-          activeMappings = mappings.filter(m =>
-            m.presentationTable === selectedOtbiTable && m.presentationColumn === activeColumn.colName
-          );
-        } else {
-          activeMappings = mappings.filter(m =>
-            m.pvoName === activeColumn.tableId &&
-            m.pvoAttribute === activeColumn.colName &&
-            m.presentationTable === selectedOtbiTable
-          );
-        }
-        return activeMappings.map((m, i) => ({
-          id: `otbi-col-edge-${i}`,
-          source: m.pvoName,
-          target: m.presentationTable,
-          sourceHandle: `col-${m.pvoAttribute}`,
-          targetHandle: `col-${m.presentationColumn}`,
-          animated: true,
-          style: { stroke: '#F97316', strokeWidth: 3 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: '#F97316' },
-        }));
-      }
-
-      return Array.from(pvosSet).map((pvo, i) => ({
-        id: `otbi-tbl-edge-${i}`,
-        source: pvo,
-        target: selectedOtbiTable,
-        sourceHandle: 'table-source',
-        targetHandle: 'table-target',
-        animated: false,
-        style: { stroke: '#F97316', strokeWidth: 2, opacity: 0.7 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#F97316' },
-      }));
+      return [];
     }
 
     if (!selectedPresTable) return [];
@@ -707,6 +630,13 @@ export default function App() {
     }
   }, [metricDetails, aiMatchedFdi, aiMatchedFdiLoading, mappings]);
 
+  // Auto-fetch FDI matches when column changes in OTBI bridge workspace
+  useEffect(() => {
+    if (workspace === 'otbi' && metricDetails && !aiMatchedFdi && !aiMatchedFdiLoading) {
+      fetchAiFdiMatches();
+    }
+  }, [workspace, metricDetails, aiMatchedFdi, aiMatchedFdiLoading, fetchAiFdiMatches]);
+
 
   // ══════════════════════════════════════════════════════════════════════════════
   //   RENDER
@@ -763,7 +693,7 @@ export default function App() {
               transition: 'all 0.15s'
             }}
           >
-            🔄 OTBI Bridge
+            🔄 OTBI - FDI Match Bridge
           </button>
         </div>
 
@@ -976,10 +906,10 @@ export default function App() {
             ) : (
               <div className="canvas-empty">
                 <div className="empty-illustration">🔍</div>
-                <h3>Explore Data Lineage</h3>
+                <h3>{workspace === 'otbi' ? 'OTBI - FDI Match Bridge' : 'Explore Data Lineage'}</h3>
                 <p>
                   {workspace === 'otbi'
-                    ? "Select an OTBI Presentation Table from the left panel to visualize its data lineage to PVO extractions."
+                    ? "Select an OTBI Presentation Table from the left panel, then click any column to find its match in FDI."
                     : "Select a Presentation Table from the left panel to visualize its full data lineage from physical source tables."}
                 </p>
                 {workspace === 'fdi' && (
@@ -995,46 +925,12 @@ export default function App() {
             {metricDetails && (
               <aside className={`details-drawer ${metricDetails ? 'open' : ''}`}>
                 <div className="drawer-topbar">
-                  <h3>🏷 {workspace === 'otbi' ? 'OTBI Column Details' : 'Column Details'}</h3>
+                  <h3>🏷 {workspace === 'otbi' ? 'OTBI - FDI Match Bridge' : 'Column Details'}</h3>
                   <button className="drawer-close" onClick={() => { setMetricDetails(null); setActiveColumn(null); }}>✕</button>
                 </div>
 
-                {/* Tabs bar */}
-                {workspace === 'otbi' ? (
-                  <div style={{
-                    display: 'flex',
-                    borderBottom: '1px solid var(--border)',
-                    background: 'var(--bg-app)',
-                    padding: '0 10px'
-                  }}>
-                    <button
-                      onClick={() => setOtbiDrawerTab('mappings')}
-                      style={{
-                        flex: 1, padding: '12px 6px', border: 'none', background: 'none', cursor: 'pointer',
-                        fontSize: '11.5px', fontWeight: '600',
-                        color: otbiDrawerTab === 'mappings' ? 'var(--primary)' : 'var(--text-muted)',
-                        borderBottom: otbiDrawerTab === 'mappings' ? '2.5px solid var(--primary)' : '2.5px solid transparent',
-                        transition: 'all 0.15s',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px'
-                      }}
-                    >
-                      🗄 Sources
-                    </button>
-                    <button
-                      onClick={() => { setOtbiDrawerTab('grok'); fetchAiFdiMatches(); }}
-                      style={{
-                        flex: 1, padding: '12px 6px', border: 'none', background: 'none', cursor: 'pointer',
-                        fontSize: '11.5px', fontWeight: '600',
-                        color: otbiDrawerTab === 'grok' ? 'var(--primary)' : 'var(--text-muted)',
-                        borderBottom: otbiDrawerTab === 'grok' ? '2.5px solid var(--primary)' : '2.5px solid transparent',
-                        transition: 'all 0.15s',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px'
-                      }}
-                    >
-                      🤖 Grok FDI Match
-                    </button>
-                  </div>
-                ) : (
+                {/* Tabs bar (FDI workspace only) */}
+                {workspace === 'fdi' && (
                   <div style={{
                     display: 'flex',
                     borderBottom: '1px solid var(--border)',
@@ -1089,11 +985,11 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Tab Content: Mappings (FDI or OTBI) */}
-                  {((workspace === 'otbi' && otbiDrawerTab === 'mappings') || (workspace === 'fdi' && drawerTab === 'mappings')) && (
+                  {/* Tab Content: Mappings (FDI only) */}
+                  {workspace === 'fdi' && drawerTab === 'mappings' && (
                     <div className="drawer-field" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                       <span className="drawer-field-label" style={{ marginBottom: 8 }}>
-                        Source {workspace === 'otbi' ? 'PVO Attributes' : 'Physical Columns'} ({metricDetails.mappings?.length || 0})
+                        Source Physical Columns ({metricDetails.mappings?.length || 0})
                       </span>
                       <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10, paddingRight: 4 }}>
                         {metricDetails.mappings && metricDetails.mappings.length > 0 ? (
@@ -1110,7 +1006,7 @@ export default function App() {
                             }}>
                               <div>
                                 <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: 2 }}>
-                                  {workspace === 'otbi' ? '🗄️ Source PVO' : '🗄️ Physical Table'}
+                                  🗄️ Physical Table
                                 </div>
                                 <div style={{ fontSize: '11.5px', fontWeight: '600', color: 'var(--text-h)', wordBreak: 'break-all', fontFamily: 'var(--font-mono)' }}>
                                   {m.physicalTable}
@@ -1119,7 +1015,7 @@ export default function App() {
                               <div style={{ height: '1px', background: 'var(--border)' }} />
                               <div>
                                 <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: 2 }}>
-                                  {workspace === 'otbi' ? '◆ PVO Attribute' : '◆ Physical Column'}
+                                  ◆ Physical Column
                                 </div>
                                 <div style={{ fontSize: '11.5px', fontWeight: '700', color: 'var(--in-700)', wordBreak: 'break-all', fontFamily: 'var(--font-mono)' }}>
                                   {m.physicalColumn}
@@ -1136,7 +1032,7 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* Tab Content: FDI AI Explain */}
+                  {/* Tab Content: FDI AI Explain (FDI only) */}
                   {workspace === 'fdi' && drawerTab === 'explain' && (
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
                       <span className="drawer-field-label" style={{ marginBottom: 10 }}>AI Lineage Explanation</span>
@@ -1159,8 +1055,8 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* Tab Content: OTBI Grok FDI Match */}
-                  {workspace === 'otbi' && otbiDrawerTab === 'grok' && (
+                  {/* Tab Content: OTBI Grok FDI Match (OTBI only, auto-displayed) */}
+                  {workspace === 'otbi' && (
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, gap: '14px' }}>
                       
                       {/* Section 1: Deterministic Matches */}
