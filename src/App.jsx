@@ -157,6 +157,7 @@ export default function App() {
 
   // OTBI AI Match states
   const [aiMatchedFdi,       setAiMatchedFdi]       = useState('');
+  const [exactMatchedFdi,    setExactMatchedFdi]    = useState([]);
   const [aiMatchedFdiLoading, setAiMatchedFdiLoading] = useState(false);
   const [otbiDrawerTab,      setOtbiDrawerTab]      = useState('mappings'); // 'mappings' | 'grok'
 
@@ -324,8 +325,15 @@ export default function App() {
   const filteredFolders = useMemo(() => {
     const q = (workspace === 'otbi' ? otbiSidebarSearch : sidebarSearch).toLowerCase();
     if (!q) return presFolders;
-    return presFolders.filter(f => f.name.toLowerCase().includes(q));
-  }, [workspace, presFolders, sidebarSearch, otbiSidebarSearch]);
+    return presFolders.filter(f => {
+      const matchTable = f.name.toLowerCase().includes(q);
+      if (matchTable) return true;
+      
+      const nodeObj = nodes.find(n => n.id === f.name);
+      const columns = nodeObj?.data?.columns || [];
+      return columns.some(col => col.toLowerCase().includes(q));
+    });
+  }, [workspace, presFolders, sidebarSearch, otbiSidebarSearch, nodes]);
 
   // ── Compare folders ───────────────────────────────────────────────────────────
   const cmpFolders = useMemo(() =>
@@ -541,6 +549,7 @@ export default function App() {
         setMetricDetails(null);
         setAiExplanation('');
         setAiMatchedFdi('');
+        setExactMatchedFdi([]);
         return null;
       }
 
@@ -558,10 +567,12 @@ export default function App() {
             }))
           });
           setAiMatchedFdi('');
+          setExactMatchedFdi([]);
           setOtbiDrawerTab('mappings');
         } else {
           setMetricDetails(null);
           setAiMatchedFdi('');
+          setExactMatchedFdi([]);
         }
       } else {
         if (tableId === selectedPresTable) {
@@ -687,6 +698,7 @@ export default function App() {
         })
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
+      setExactMatchedFdi(res.exactMatches || []);
       setAiMatchedFdi(res.matches);
     } catch (e) {
       setAiMatchedFdi(`Failed to load AI matches: ${e.message}`);
@@ -1149,24 +1161,68 @@ export default function App() {
 
                   {/* Tab Content: OTBI Grok FDI Match */}
                   {workspace === 'otbi' && otbiDrawerTab === 'grok' && (
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-                      <span className="drawer-field-label" style={{ marginBottom: 10 }}>Grok-Matched FDI Columns</span>
+                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, gap: '14px' }}>
                       
-                      {aiMatchedFdiLoading ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, flex: 1 }}>
-                          <span style={{ fontSize: '24px', animation: 'spin 0.8s linear infinite', color: 'var(--primary)' }}>⟳</span>
-                          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking Grok to match FDI columns...</span>
-                        </div>
-                      ) : (
-                        <div style={{
-                          flex: 1, overflowY: 'auto', padding: '16px', borderRadius: 'var(--r-md)',
-                          background: 'linear-gradient(135deg, rgba(249,115,22,0.04), rgba(99,102,241,0.02))',
-                          border: '1px solid var(--primary-border)', lineHeight: '1.6', fontSize: '13px',
-                          color: 'var(--text-body)', whiteSpace: 'pre-wrap'
-                        }}>
-                          {aiMatchedFdi || "No matches returned."}
-                        </div>
-                      )}
+                      {/* Section 1: Deterministic Matches */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <span className="drawer-field-label">🔗 Direct Warehouse Lineage Links</span>
+                        {aiMatchedFdiLoading ? (
+                          <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontStyle: 'italic', paddingLeft: 4 }}>Checking database...</div>
+                        ) : exactMatchedFdi.length > 0 ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {exactMatchedFdi.map((match, i) => (
+                              <div key={i} style={{
+                                padding: '10px 12px',
+                                border: '1px solid var(--border)',
+                                borderRadius: 'var(--r-md)',
+                                background: 'linear-gradient(135deg, rgba(99,102,241,0.06), rgba(99,102,241,0.02))',
+                                boxShadow: 'var(--sh-xs)'
+                              }}>
+                                <div style={{ fontSize: '9px', fontWeight: 'bold', color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                  🎯 Exact Match Found
+                                </div>
+                                <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-h)' }}>
+                                  {match.subjectArea}
+                                </div>
+                                <div style={{ fontSize: '11px', color: 'var(--text-body)', marginTop: '2px', display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                  <span style={{ color: 'var(--text-faint)' }}>Table:</span>
+                                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{match.presentationTable}</span>
+                                  <span style={{ color: 'var(--text-faint)' }}>›</span>
+                                  <span style={{ color: 'var(--in-700)', fontWeight: 700 }}>{match.presentationColumn}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: '12px', color: 'var(--text-faint)', fontStyle: 'italic', paddingLeft: 4 }}>
+                            No exact physical links found in the FDI mapping tables.
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{ height: '1px', background: 'var(--border)' }} />
+
+                      {/* Section 2: AI Semantic Ranks */}
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+                        <span className="drawer-field-label" style={{ marginBottom: 8 }}>🤖 Grok AI Semantic Rankings</span>
+                        
+                        {aiMatchedFdiLoading ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, flex: 1 }}>
+                            <span style={{ fontSize: '24px', animation: 'spin 0.8s linear infinite', color: 'var(--primary)' }}>⟳</span>
+                            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking Grok to match FDI columns...</span>
+                          </div>
+                        ) : (
+                          <div style={{
+                            flex: 1, overflowY: 'auto', padding: '16px', borderRadius: 'var(--r-md)',
+                            background: 'linear-gradient(135deg, rgba(249,115,22,0.04), rgba(99,102,241,0.02))',
+                            border: '1px solid var(--primary-border)', lineHeight: '1.6', fontSize: '13px',
+                            color: 'var(--text-body)', whiteSpace: 'pre-wrap'
+                          }}>
+                            {aiMatchedFdi || "No recommendations returned."}
+                          </div>
+                        )}
+                      </div>
+
                     </div>
                   )}
 

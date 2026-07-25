@@ -326,61 +326,34 @@ Keep it under 150 words, structured, and easy to read.`;
   }
 });
 
-// Ensure otbi_lineage_mappings table exists and has seed data
-async function ensureOtbiTableExists() {
-  try {
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS otbi_lineage_mappings (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        subject_area_slug TEXT,
-        otbi_subject_area TEXT,
-        otbi_presentation_table TEXT,
-        otbi_presentation_column TEXT,
-        pvo_name TEXT,
-        pvo_attribute TEXT
-      )
-    `);
-    
-    // Check if table is empty
-    const res = await db.execute(`SELECT COUNT(*) as count FROM otbi_lineage_mappings`);
-    const count = res.rows[0]?.count || 0;
-    if (count === 0) {
-      // Seed with some mock data so the user can test the UI immediately
-      await db.execute({
-        sql: `INSERT INTO otbi_lineage_mappings (subject_area_slug, otbi_subject_area, otbi_presentation_table, otbi_presentation_column, pvo_name, pvo_attribute) VALUES
-          (?, ?, ?, ?, ?, ?),
-          (?, ?, ?, ?, ?, ?),
-          (?, ?, ?, ?, ?, ?),
-          (?, ?, ?, ?, ?, ?),
-          (?, ?, ?, ?, ?, ?)`,
-        args: [
-          'receivables_ar_transactions', 'Receivables - Transactions Real Time', 'Transaction Details', 'Transaction Number', 'ArTransactionHeaderPVO', 'TrxNumber',
-          'receivables_ar_transactions', 'Receivables - Transactions Real Time', 'Transaction Details', 'Transaction Date', 'ArTransactionHeaderPVO', 'TrxDate',
-          'receivables_ar_transactions', 'Receivables - Transactions Real Time', 'Transaction Details', 'Transaction Status', 'ArTransactionHeaderPVO', 'TrxStatus',
-          'receivables_ar_transactions', 'Receivables - Transactions Real Time', 'Customer Details', 'Customer Name', 'ArCustomerAccountPVO', 'AccountName',
-          'receivables_ar_transactions', 'Receivables - Transactions Real Time', 'Customer Details', 'Customer Number', 'ArCustomerAccountPVO', 'AccountNumber'
-        ]
-      });
-      console.log('Seeded otbi_lineage_mappings table with mock data.');
-    }
-  } catch (err) {
-    console.error('Error creating/seeding otbi_lineage_mappings table:', err.message);
-  }
-}
+// Consolidated list of OTBI tables
+const OTBI_TABLES = ['"OTBI-Finance"', '"OTBI-HCM"', '"OTBI-SCM"', '"OTBI-CX"', '"OTBI-Project"'];
 
-// 7. GET /api/otbi/subject-areas
+// 7. GET /api/otbi/subject-areas - Consolidated list of subject areas from the 5 tables
 app.get('/api/otbi/subject-areas', async (req, res) => {
   try {
-    await ensureOtbiTableExists();
-    const result = await db.execute(`
-      SELECT DISTINCT subject_area_slug, otbi_subject_area 
-      FROM otbi_lineage_mappings 
-      ORDER BY otbi_subject_area ASC
-    `);
-    const sas = result.rows.map(r => ({
-      slug: r.subject_area_slug,
-      name: r.otbi_subject_area
-    }));
+    const sas = [];
+    for (const table of OTBI_TABLES) {
+      try {
+        const result = await db.execute(`
+          SELECT DISTINCT subject_area 
+          FROM ${table} 
+          ORDER BY subject_area ASC
+        `);
+        result.rows.forEach(r => {
+          if (r.subject_area && !sas.some(x => x.name === r.subject_area)) {
+            sas.push({
+              slug: slugify(r.subject_area),
+              name: r.subject_area,
+              sourceTable: table
+            });
+          }
+        });
+      } catch (err) {
+        console.error(`Error loading subject areas from ${table}:`, err.message);
+      }
+    }
+    sas.sort((a, b) => a.name.localeCompare(b.name));
     res.json(sas);
   } catch (err) {
     console.error('Error fetching OTBI subject areas:', err.message);
@@ -388,25 +361,56 @@ app.get('/api/otbi/subject-areas', async (req, res) => {
   }
 });
 
-// 8. GET /api/otbi/lineage/:slug
+// 8. GET /api/otbi/lineage/:slug - Get mappings across the 5 tables for a subject area
 app.get('/api/otbi/lineage/:slug', async (req, res) => {
   try {
     const { slug } = req.params;
-    await ensureOtbiTableExists();
-    const result = await db.execute({
-      sql: `SELECT otbi_presentation_table, otbi_presentation_column, pvo_name, pvo_attribute 
-            FROM otbi_lineage_mappings 
-            WHERE subject_area_slug = ?`,
-      args: [slug]
-    });
+    let mappings = [];
+    let targetTable = null;
+    let targetSAName = null;
     
-    const mappings = result.rows.map(r => ({
-      presentationTable: r.otbi_presentation_table,
-      presentationColumn: r.otbi_presentation_column,
-      pvoName: r.pvo_name,
-      pvoAttribute: r.pvo_attribute
-    }));
+    // Find which table contains this subject area slug
+    for (const table of OTBI_TABLES) {
+      try {
+        const saCheck = await db.execute(`SELECT DISTINCT subject_area FROM ${table}`);
+        const match = saCheck.rows.find(r => slugify(r.subject_area || '') === slug);
+        if (match) {
+          targetTable = table;
+          targetSAName = match.subject_area;
+          break;
+        }
+      } catch (err) {
+        // Table might not exist or be empty
+      }
+    }
     
+    if (targetTable && targetSAName) {
+      const result = await db.execute({
+        sql: `SELECT presentation_table, presentation_column, physical_table, physical_column 
+              FROM ${targetTable} 
+              WHERE subject_area = ?`,
+        args: [targetSAName]
+      });
+      
+      mappings = result.rows.map(r => {
+        // Extract PVO name from full definition (e.g. FscmTopModelAM.ContractsCoreAM.ResourceP -> ResourcePVO / ResourceP)
+        let pvoRaw = r.physical_table || '';
+        let pvoName = pvoRaw.split('.').pop() || '';
+        // Standardize PVO suffix if it's a PVO path
+        if (pvoName && !pvoName.endsWith('PVO') && pvoRaw.toLowerCase().includes('publicview')) {
+          pvoName = pvoName + 'PVO';
+        }
+        
+        return {
+          presentationTable: r.presentation_table,
+          presentationColumn: r.presentation_column,
+          pvoName: pvoName || 'UnknownPVO',
+          pvoAttribute: r.physical_column || 'UnknownAttribute'
+        };
+      });
+    }
+    
+    // Process React Flow nodes and edges
     const nodesDict = {};
     const connectionsSet = new Set();
     
@@ -452,17 +456,19 @@ app.get('/api/otbi/lineage/:slug', async (req, res) => {
       });
     });
     
+    // React Flow edges from left (Presentation Table) to right (PVO extraction)
     const reactEdges = [];
     let edgeIdx = 1;
     connectionsSet.forEach(conn => {
       const [source, target] = conn.split('|||');
+      // For OTBI bridge flow: Presentation Table is source (left), PVO is target (right)
       reactEdges.push({
         id: `otbi-e-${edgeIdx++}`,
-        source,
-        target,
+        source: target, // Pres Table
+        target: source, // PVO Table
         animated: true,
         style: { stroke: '#F97316', strokeWidth: 2, opacity: 0.8 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#F97316' }
+        markerEnd: { type: 'arrowclosed', color: '#F97316' }
       });
     });
     
@@ -477,7 +483,7 @@ app.get('/api/otbi/lineage/:slug', async (req, res) => {
   }
 });
 
-// 9. POST /api/ai/match-fdi
+// 9. POST /api/ai/match-fdi - Hybrid exact-match and Grok AI ranker
 app.post('/api/ai/match-fdi', async (req, res) => {
   try {
     const { otbiColumn, otbiTable, pvoName, pvoAttribute } = req.body;
@@ -485,9 +491,31 @@ app.post('/api/ai/match-fdi', async (req, res) => {
       return res.status(400).json({ error: 'Missing matching parameters' });
     }
     
-    const pvoSearch = `%${pvoName.replace(/PVO$/i, '')}%`;
+    const pvoClean = pvoName.replace(/PVO$/i, '');
+    const pvoSearch = `%${pvoClean}%`;
     const attrSearch = `%${pvoAttribute}%`;
     
+    // 1. Fetch EXACT matches from FDI mappings table
+    let exactMatches = [];
+    try {
+      const exactRes = await db.execute({
+        sql: `SELECT DISTINCT subject_area, presentation_table, presentation_column, physical_table, physical_column
+              FROM lineage_mappings
+              WHERE (physical_table LIKE ? OR physical_table = ?) AND physical_column = ?`,
+        args: [pvoSearch, pvoName, pvoAttribute]
+      });
+      exactMatches = exactRes.rows.map(r => ({
+        subjectArea: r.subject_area,
+        presentationTable: r.presentation_table,
+        presentationColumn: r.presentation_column,
+        physicalTable: r.physical_table,
+        physicalColumn: r.physical_column
+      }));
+    } catch (exactErr) {
+      console.error('Exact DB Match error:', exactErr.message);
+    }
+
+    // 2. Fetch wider candidates for Grok semantic matching
     let candidatesRows = [];
     try {
       const dbRes = await db.execute({
@@ -515,6 +543,7 @@ app.post('/api/ai/match-fdi', async (req, res) => {
       } catch (e) {}
     }
     
+    // 3. Ask Grok to explain semantic suggestions
     const systemPrompt = "You are a senior data architect specializing in Oracle BI (OTBI) and Fusion Data Intelligence (FDI) schemas. Your task is to match an OTBI presentation column to the most likely FDI database warehouse columns.";
     const userPrompt = `Target OTBI Column to Match:
 - OTBI Presentation Table: "${otbiTable}"
@@ -533,10 +562,13 @@ For each of the top 3 matches, output:
 3. Match Confidence Score (percentage, e.g. 95%)
 4. Brief Explanation of the match reason.
 
-Keep the output concise, structured, and in clean, readable text format. If no candidates match, explain why and suggest what the theoretical FDI mapping should be.`;
+Keep the output concise, structured, and in clean, readable text format. If no candidates match, suggest what the theoretical FDI mapping should be.`;
     
-    const result = await callGrok(systemPrompt, userPrompt);
-    res.json({ matches: result });
+    const aiResult = await callGrok(systemPrompt, userPrompt);
+    res.json({
+      exactMatches,
+      matches: aiResult
+    });
   } catch (err) {
     console.error('AI match error:', err.message);
     res.status(500).json({ error: err.message || 'AI matching failed' });
