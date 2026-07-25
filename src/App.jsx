@@ -213,6 +213,7 @@ export default function App() {
   const [pvoLoading,     setPvoLoading]     = useState(false);
   const [pvoError,       setPvoError]       = useState('');
   const [pvoStepIndex,   setPvoStepIndex]   = useState(0);
+  const [pvoCards,       setPvoCards]       = useState([]); // Parsed PVO scorecard items
 
   // ── Init + URL restore ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -832,7 +833,17 @@ export default function App() {
       }).then(r => r.json());
       
       if (res.error) throw new Error(res.error);
-      setPvoResult(res.plan || 'No customization plan returned.');
+      const planText = res.plan || 'No customization plan returned.';
+      
+      // Parse PVO cards from the plan markdown: find ### PVO [N]: lines with Match Score
+      const pvoCardMatches = [...planText.matchAll(/###\s*PVO\s*(\d+):\s*([^\n]+)\n\*\*Match Score:\s*([^*\n]+)\*\*/g)];
+      const parsedCards = pvoCardMatches.map(m => ({
+        rank: m[1],
+        pvoName: m[2].trim(),
+        score: m[3].trim()
+      }));
+      setPvoCards(parsedCards);
+      setPvoResult(planText);
     } catch (err) {
       setPvoError(err.message || 'Failed to generate customization plan.');
     } finally {
@@ -1136,7 +1147,7 @@ export default function App() {
               <form onSubmit={handlePvoFinderSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
-                    1. Target OTBI Subject Area
+                    1. Source OTBI Subject Area
                   </label>
                   <select
                     className="selector-select"
@@ -1242,7 +1253,7 @@ export default function App() {
                 </span>
                 {pvoResult && (
                   <button
-                    onClick={() => { setPvoResult(''); setPvoExplanation(''); }}
+                    onClick={() => { setPvoResult(''); setPvoExplanation(''); setPvoCards([]); }}
                     style={{
                       border: 'none',
                       background: 'none',
@@ -1264,7 +1275,7 @@ export default function App() {
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
                       <span style={{ fontSize: '14px', fontWeight: 'bold', color: 'var(--text-h)' }}>
                         {pvoStepIndex === 0 && "Analyzing OTBI lineage data..."}
-                        {pvoStepIndex === 1 && "Finding relevant Fusion PVO views..."}
+                        {pvoStepIndex === 1 && "Identifying top 3 Fusion PVOs..."}
                         {pvoStepIndex === 2 && "Designing join configurations in FDI..."}
                         {pvoStepIndex === 3 && "Structuring Sandbox extension guide..."}
                       </span>
@@ -1283,15 +1294,67 @@ export default function App() {
                     <strong>Error: </strong> {pvoError}
                   </div>
                 ) : pvoResult ? (
-                  <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
-                    {renderMarkdown(pvoResult)}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
+
+                    {/* ── 3 PVO Score Cards ── */}
+                    {pvoCards.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.05em' }}>
+                          🏆 Top Recommended PVOs
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                          {pvoCards.map((card, i) => {
+                            const scoreNum = parseInt(card.score);
+                            const color = i === 0 ? '#6366F1' : i === 1 ? '#F97316' : '#10B981';
+                            const bg = i === 0 ? 'rgba(99,102,241,0.08)' : i === 1 ? 'rgba(249,115,22,0.08)' : 'rgba(16,185,129,0.08)';
+                            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+                            return (
+                              <div key={i} style={{
+                                flex: '1 1 160px',
+                                padding: '14px 16px',
+                                borderRadius: '10px',
+                                border: `1px solid ${color}40`,
+                                background: bg,
+                                boxShadow: `0 0 0 1px ${color}20`
+                              }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                                  <span style={{ fontSize: '16px' }}>{medal}</span>
+                                  <span style={{ fontSize: '10px', fontWeight: 'bold', color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>PVO #{card.rank}</span>
+                                </div>
+                                <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-h)', marginBottom: '10px', wordBreak: 'break-word', lineHeight: 1.4 }}>
+                                  {card.pvoName}
+                                </div>
+                                {/* Score Bar */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '10px', color: 'var(--text-faint)' }}>Match Score</span>
+                                    <span style={{ fontSize: '12px', fontWeight: 'bold', color }}>{card.score}</span>
+                                  </div>
+                                  <div style={{ height: '4px', borderRadius: '2px', background: 'var(--bg-app)', overflow: 'hidden' }}>
+                                    <div style={{ height: '100%', width: card.score, background: color, borderRadius: '2px', transition: 'width 0.6s ease' }} />
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    <div style={{ height: '1px', background: 'var(--border)' }} />
+
+                    {/* ── Full Markdown Plan ── */}
+                    <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
+                      {renderMarkdown(pvoResult)}
+                    </div>
+
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px', color: 'var(--text-faint)', textAlign: 'center', padding: '0 40px' }}>
                     <span style={{ fontSize: '48px' }}>🤖</span>
                     <h4 style={{ fontSize: '15px', fontWeight: 'bold', color: 'var(--text-muted)' }}>No Blueprint Generated Yet</h4>
                     <p style={{ fontSize: '12.5px', maxWidth: '360px', margin: '0 auto', lineHeight: 1.5 }}>
-                      Fill out the form on the left, explaining your business case. Grok will generate a customized implementation plan with target PVOs, FDI tables, join keys, and a Sandbox configuration guide.
+                      Fill out the form on the left, explaining your business case. Grok will generate a customized implementation plan with top 3 target PVOs with match scores, FDI tables, join keys, and a Sandbox configuration guide.
                     </p>
                   </div>
                 )}
