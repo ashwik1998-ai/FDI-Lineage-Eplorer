@@ -90,6 +90,222 @@ const pushRecent  = (item) => {
 const shortName   = (fullName = '') => fullName.split('.').pop() ?? fullName;
 const slugify     = (s = '') => s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 
+const parsePvoPlan = (planText) => {
+  if (!planText) return { intro: '', pvos: [], guide: '' };
+  const result = { intro: '', pvos: [], guide: '' };
+  
+  // Split content by PVO sections
+  const parts = planText.split(/###\s*PVO\s*/i);
+  if (parts.length <= 1) {
+    result.intro = planText;
+    return result;
+  }
+  
+  result.intro = parts[0];
+  for (let i = 1; i < parts.length; i++) {
+    const part = parts[i];
+    let detailsText = part;
+    let guideText = '';
+    
+    // Split guide if it's inside this part
+    const guideMatch = part.split(/###\s*(Sandbox|FDI Sandbox|Guide|Sandbox Framework Guide)/i);
+    if (guideMatch.length > 1) {
+      detailsText = guideMatch[0];
+      guideText = '### ' + guideMatch.slice(1).join('');
+      result.guide = guideText;
+    }
+    
+    const firstLineEnd = detailsText.indexOf('\n');
+    const firstLine = firstLineEnd !== -1 ? detailsText.substring(0, firstLineEnd) : detailsText;
+    const rankMatch = firstLine.match(/^(\d+)[\s:]*([^\n]+)/);
+    const rank = rankMatch ? rankMatch[1] : String(i);
+    const name = rankMatch ? rankMatch[2].trim() : firstLine.trim();
+    
+    let score = '90%';
+    const scoreMatch = detailsText.match(/\*\*Match Score:\s*([^*\n]+)\*\*/i);
+    if (scoreMatch) {
+      score = scoreMatch[1].trim();
+    }
+    
+    result.pvos.push({
+      rank,
+      name,
+      score,
+      details: '### PVO ' + firstLine + '\n' + (firstLineEnd !== -1 ? detailsText.substring(firstLineEnd + 1) : '')
+    });
+  }
+  
+  return result;
+};
+
+const extractField = (text = '', label) => {
+  if (!text) return '';
+  let regexes = [];
+  if (label === 'pattern') {
+    regexes = [
+      /-\s*\*\*Extensibility\s+Pattern:\*\*\s*([^\n]+)/i,
+      /Extensibility\s+Pattern\s*[:*-\s]+([^\n]+)/i,
+      /\*\*Extensibility\s+Pattern\*\*:\s*([^\n]+)/i
+    ];
+  } else if (label === 'table') {
+    regexes = [
+      /-\s*\*\*Target\s+FDI\s+Warehouse\s+Table:\*\*\s*([^\n]+)/i,
+      /Target\s+FDI\s+(Warehouse\s+)?Table\s*[:*-\s]+([^\n]+)/i,
+      /\*\*Target\s+FDI\s+Warehouse\s+Table\*\*:\s*([^\n]+)/i
+    ];
+  } else if (label === 'key') {
+    regexes = [
+      /-\s*\*\*Join\s+Key:\*\*\s*([^\n]+)/i,
+      /Join\s+Key\s*[:*-\s]+([^\n]+)/i,
+      /\*\*Join\s+Key\*\*:\s*([^\n]+)/i
+    ];
+  }
+  for (const r of regexes) {
+    const match = text.match(r);
+    if (match) return match[1].replace(/[*_`]/g, '').trim();
+  }
+  return '';
+};
+
+function SearchableSelect({ options, value, onChange, placeholder, style }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const containerRef = useRef(null);
+
+  const selectedOption = options.find(o => o.value === value);
+  const displayLabel = selectedOption ? selectedOption.label : '';
+
+  const filtered = options.filter(o => 
+    o.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+        setSearch('');
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={containerRef} style={{ position: 'relative', width: '100%', minWidth: '220px', ...style }}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 12px',
+          background: 'var(--bg-app)',
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          color: 'var(--text-h)',
+          fontSize: '13px',
+          height: '36px',
+          boxSizing: 'border-box'
+        }}
+      >
+        <span style={{ 
+          whiteSpace: 'nowrap', 
+          overflow: 'hidden', 
+          textOverflow: 'ellipsis',
+          flex: 1,
+          color: selectedOption ? 'var(--text-h)' : 'var(--text-muted)'
+        }}>
+          {isOpen ? (
+            <input 
+              type="text"
+              autoFocus
+              value={search}
+              placeholder="Type to filter..."
+              onChange={(e) => setSearch(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-h)',
+                outline: 'none',
+                width: '100%',
+                fontSize: '13px',
+                padding: '0'
+              }}
+            />
+          ) : (
+            displayLabel || placeholder || 'Select...'
+          )}
+        </span>
+        <span style={{ fontSize: '9px', color: 'var(--text-faint)', marginLeft: '8px' }}>{isOpen ? '▲' : '▼'}</span>
+      </div>
+
+      {isOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          left: '0',
+          right: '0',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          marginTop: '4px',
+          maxHeight: '220px',
+          overflowY: 'auto',
+          zIndex: 1000,
+          boxShadow: 'var(--sh-lg)',
+          padding: '4px'
+        }}>
+          {filtered.length > 0 ? (
+            filtered.map((opt) => (
+              <div
+                key={opt.value}
+                onClick={() => {
+                  onChange(opt.value);
+                  setIsOpen(false);
+                  setSearch('');
+                }}
+                style={{
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '12.5px',
+                  color: opt.value === value ? '#fff' : 'var(--text-h)',
+                  background: opt.value === value ? 'var(--primary)' : 'transparent',
+                  transition: 'background 0.1s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+                onMouseEnter={(e) => {
+                  if (opt.value !== value) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (opt.value !== value) {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                {opt.label}
+              </div>
+            ))
+          ) : (
+            <div style={{ padding: '8px 12px', color: 'var(--text-faint)', fontSize: '12.5px', textAlign: 'center' }}>
+              No matches found
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function exportCSV(mappings, saName) {
   const header = 'Subject Area,Presentation Table,Presentation Column,Physical Table,Physical Column\n';
   const rows   = mappings.map(m =>
@@ -248,6 +464,11 @@ export default function App() {
   const [pvoError,       setPvoError]       = useState('');
   const [pvoStepIndex,   setPvoStepIndex]   = useState(0);
   const [pvoCards,       setPvoCards]       = useState([]); // Parsed PVO scorecard items
+  const [selectedPvoIdx, setSelectedPvoIdx] = useState(0); // Currently selected PVO index
+
+  const parsedPlan = useMemo(() => {
+    return parsePvoPlan(pvoResult);
+  }, [pvoResult]);
 
   // ── Init + URL restore ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -854,6 +1075,7 @@ export default function App() {
     setPvoError('');
     setPvoResult('');
     setPvoStepIndex(0);
+    setSelectedPvoIdx(0);
 
     const interval = setInterval(() => {
       setPvoStepIndex(prev => (prev + 1) % 4);
@@ -1011,13 +1233,13 @@ export default function App() {
               </div>
               <div className="selector-group">
                 <span className="selector-label">OTBI Subject Area</span>
-                <select className="selector-select" style={{ minWidth: 250 }}
+                <SearchableSelect
+                  options={filteredOtbiSAs.map(sa => ({ value: sa.slug, label: sa.name }))}
                   value={selectedOtbiSA}
-                  onChange={e => { setSelectedOtbiSA(e.target.value); setSelectedOtbiTable(null); }}>
-                  {filteredOtbiSAs.map(sa => (
-                    <option key={sa.slug} value={sa.slug}>{sa.name}</option>
-                  ))}
-                </select>
+                  onChange={val => { setSelectedOtbiSA(val); setSelectedOtbiTable(null); }}
+                  placeholder="Select OTBI Subject Area..."
+                  style={{ minWidth: '320px' }}
+                />
               </div>
             </>
           ) : workspace === 'pvo' ? null : (
@@ -1034,13 +1256,13 @@ export default function App() {
               </div>
               <div className="selector-group">
                 <span className="selector-label">Subject Area</span>
-                <select className="selector-select" style={{ minWidth: 220 }}
+                <SearchableSelect
+                  options={filteredSAs.map(sa => ({ value: sa.slug, label: `[${sa.pillar}] ${sa.name}` }))}
                   value={selectedSA}
-                  onChange={e => { setSelectedSA(e.target.value); setSelectedPresTable(null); }}>
-                  {filteredSAs.map(sa => (
-                    <option key={sa.slug} value={sa.slug}>[{sa.pillar}] {sa.name}</option>
-                  ))}
-                </select>
+                  onChange={val => { setSelectedSA(val); setSelectedPresTable(null); }}
+                  placeholder="Select Subject Area..."
+                  style={{ minWidth: '280px' }}
+                />
               </div>
             </>
           )}
@@ -1187,32 +1409,26 @@ export default function App() {
                   <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
                     1. Source OTBI Subject Area
                   </label>
-                  <select
-                    className="selector-select"
-                    style={{ width: '100%', background: 'var(--bg-app)', border: '1px solid var(--border)' }}
+                  <SearchableSelect
+                    options={otbiSubjectAreas.map(sa => ({ value: sa.name, label: sa.name }))}
                     value={pvoOtbiSA}
-                    onChange={e => setPvoOtbiSA(e.target.value)}
-                  >
-                    {otbiSubjectAreas.map(sa => (
-                      <option key={sa.slug} value={sa.name}>{sa.name}</option>
-                    ))}
-                  </select>
+                    onChange={val => setPvoOtbiSA(val)}
+                    placeholder="Search OTBI Subject Area..."
+                    style={{ width: '100%' }}
+                  />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase' }}>
                     2. Target FDI Subject Area
                   </label>
-                  <select
-                    className="selector-select"
-                    style={{ width: '100%', background: 'var(--bg-app)', border: '1px solid var(--border)' }}
+                  <SearchableSelect
+                    options={subjectAreas.map(sa => ({ value: sa.name, label: `[${sa.pillar}] ${sa.name}` }))}
                     value={pvoFdiSA}
-                    onChange={e => setPvoFdiSA(e.target.value)}
-                  >
-                    {subjectAreas.map(sa => (
-                      <option key={sa.slug} value={sa.name}>[{sa.pillar}] {sa.name}</option>
-                    ))}
-                  </select>
+                    onChange={val => setPvoFdiSA(val)}
+                    placeholder="Search FDI Subject Area..."
+                    style={{ width: '100%' }}
+                  />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
@@ -1291,7 +1507,7 @@ export default function App() {
                 </span>
                 {pvoResult && (
                   <button
-                    onClick={() => { setPvoResult(''); setPvoExplanation(''); setPvoCards([]); }}
+                    onClick={() => { setPvoResult(''); setPvoExplanation(''); setPvoCards([]); setSelectedPvoIdx(0); }}
                     style={{
                       border: 'none',
                       background: 'none',
@@ -1331,62 +1547,174 @@ export default function App() {
                   }}>
                     <strong>Error: </strong> {pvoError}
                   </div>
-                ) : pvoResult ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
+                                ) : pvoResult ? (
+                  (() => {
+                    const parsed = parsedPlan;
+                    const selectedPvo = parsed.pvos[selectedPvoIdx];
+                    
+                    const pPattern = selectedPvo ? extractField(selectedPvo.details, 'pattern') : '';
+                    const pTable = selectedPvo ? extractField(selectedPvo.details, 'table') : '';
+                    const pKey = selectedPvo ? extractField(selectedPvo.details, 'key') : '';
 
-                    {/* ── 3 PVO Score Cards ── */}
-                    {pvoCards.length > 0 && (
-                      <div>
-                        <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.05em' }}>
-                          🏆 Top Recommended PVOs
-                        </div>
-                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                          {pvoCards.map((card, i) => {
-                            const scoreNum = parseInt(card.score);
-                            const color = i === 0 ? '#6366F1' : i === 1 ? '#F97316' : '#10B981';
-                            const bg = i === 0 ? 'rgba(99,102,241,0.08)' : i === 1 ? 'rgba(249,115,22,0.08)' : 'rgba(16,185,129,0.08)';
-                            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
-                            return (
-                              <div key={i} style={{
-                                flex: '1 1 160px',
-                                padding: '14px 16px',
-                                borderRadius: '10px',
-                                border: `1px solid ${color}40`,
-                                background: bg,
-                                boxShadow: `0 0 0 1px ${color}20`
-                              }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                                  <span style={{ fontSize: '16px' }}>{medal}</span>
-                                  <span style={{ fontSize: '10px', fontWeight: 'bold', color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>PVO #{card.rank}</span>
-                                </div>
-                                <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-h)', marginBottom: '10px', wordBreak: 'break-word', lineHeight: 1.4 }}>
-                                  {card.pvoName}
-                                </div>
-                                {/* Score Bar */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ fontSize: '10px', color: 'var(--text-faint)' }}>Match Score</span>
-                                    <span style={{ fontSize: '12px', fontWeight: 'bold', color }}>{card.score}</span>
+                    return (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+
+                        {/* ── 3 PVO Score Cards ── */}
+                        {pvoCards.length > 0 && (
+                          <div>
+                            <div style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--text-faint)', textTransform: 'uppercase', marginBottom: '10px', letterSpacing: '0.05em' }}>
+                              🏆 Recommended PVOs (Click to view custom blueprint)
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                              {pvoCards.map((card, i) => {
+                                const isSelected = selectedPvoIdx === i;
+                                const color = i === 0 ? '#6366F1' : i === 1 ? '#F97316' : '#10B981';
+                                const bg = isSelected 
+                                  ? (i === 0 ? 'rgba(99,102,241,0.15)' : i === 1 ? 'rgba(249,115,22,0.15)' : 'rgba(16,185,129,0.15)')
+                                  : 'rgba(255,255,255,0.02)';
+                                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+                                
+                                return (
+                                  <div 
+                                    key={i} 
+                                    onClick={() => setSelectedPvoIdx(i)}
+                                    style={{
+                                      flex: '1 1 160px',
+                                      padding: '14px 16px',
+                                      borderRadius: '10px',
+                                      border: isSelected ? `2px solid ${color}` : `1px solid var(--border)`,
+                                      background: bg,
+                                      boxShadow: isSelected ? `0 4px 12px ${color}30` : 'none',
+                                      cursor: 'pointer',
+                                      transform: isSelected ? 'translateY(-2px)' : 'none',
+                                      transition: 'all 0.2s',
+                                      position: 'relative'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      if (!isSelected) {
+                                        e.currentTarget.style.border = `1px solid ${color}80`;
+                                        e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                                      }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      if (!isSelected) {
+                                        e.currentTarget.style.border = `1px solid var(--border)`;
+                                        e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                                      }
+                                    }}
+                                  >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                                      <span style={{ fontSize: '16px' }}>{medal}</span>
+                                      <span style={{ fontSize: '10px', fontWeight: 'bold', color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>PVO #{card.rank}</span>
+                                    </div>
+                                    <div style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-h)', marginBottom: '10px', wordBreak: 'break-word', lineHeight: 1.4 }}>
+                                      {card.pvoName}
+                                    </div>
+                                    {/* Score Bar */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '10px', color: 'var(--text-faint)' }}>Match Score</span>
+                                        <span style={{ fontSize: '12px', fontWeight: 'bold', color }}>{card.score}</span>
+                                      </div>
+                                      <div style={{ height: '4px', borderRadius: '2px', background: 'var(--bg-app)', overflow: 'hidden' }}>
+                                        <div style={{ height: '100%', width: card.score, background: color, borderRadius: '2px' }} />
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div style={{ height: '4px', borderRadius: '2px', background: 'var(--bg-app)', overflow: 'hidden' }}>
-                                    <div style={{ height: '100%', width: card.score, background: color, borderRadius: '2px', transition: 'width 0.6s ease' }} />
-                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        <div style={{ height: '1px', background: 'var(--border)' }} />
+
+                        {/* ── Visual step-by-step semantic extension guide ── */}
+                        {selectedPvo && (
+                          <div style={{
+                            background: 'rgba(99, 102, 241, 0.03)',
+                            border: '1px solid rgba(99, 102, 241, 0.15)',
+                            borderRadius: '12px',
+                            padding: '20px',
+                            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.02)'
+                          }}>
+                            <h4 style={{ color: 'var(--primary)', margin: '0 0 16px 0', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <span>🚀</span> FDI Console Extension Walkthrough: {shortName(selectedPvo.name)}
+                            </h4>
+                            
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                              {/* Step 1 */}
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>1</div>
+                                <div>
+                                  <strong style={{ color: 'var(--text-h)', fontSize: '13px' }}>Create extension Sandbox</strong>
+                                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Go to FDI Console &gt; Semantic Model Extensions, click "Create Sandbox", name it (e.g. <code>Ext_{shortName(selectedPvo.name)}</code>), and open it.</p>
                                 </div>
                               </div>
-                            );
-                          })}
-                        </div>
+                              
+                              {/* Step 2 */}
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>2</div>
+                                <div>
+                                  <strong style={{ color: 'var(--text-h)', fontSize: '13px' }}>Add Data Augmentation</strong>
+                                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Create a Data Augmentation task. Select source PVO <code style={{color:'var(--primary)', background:'rgba(99,102,241,0.1)', padding:'2px 6px', borderRadius:'4px'}}>{selectedPvo.name}</code>. Extract the required columns detailed in the plan below.</p>
+                                </div>
+                              </div>
+                              
+                              {/* Step 3 */}
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>3</div>
+                                <div>
+                                  <strong style={{ color: 'var(--text-h)', fontSize: '13px' }}>Configure Logical Join</strong>
+                                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                                    Choose extensible pattern: <strong style={{color:'var(--text-h)'}}>{pPattern || 'Extend a Dimension'}</strong>.<br/>
+                                    Target FDI warehouse table: <strong style={{color:'var(--text-h)'}}>{pTable || 'Standard DW Table'}</strong>.<br/>
+                                    Join relationship: <code style={{color:'var(--primary)', background:'rgba(99,102,241,0.1)', padding:'2px 6px', borderRadius:'4px'}}>{pKey || 'Define using PVO join keys'}</code>.
+                                  </p>
+                                </div>
+                              </div>
+                              
+                              {/* Step 4 */}
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>4</div>
+                                <div>
+                                  <strong style={{ color: 'var(--text-h)', fontSize: '13px' }}>Expose Presentation Columns</strong>
+                                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Open the target Subject Area <strong>{pvoFdiSA}</strong>. Expose the augmented PVO attributes to your reporting users under the appropriate folder.</p>
+                                </div>
+                              </div>
+
+                              {/* Step 5 */}
+                              <div style={{ display: 'flex', gap: '12px' }}>
+                                <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', flexShrink: 0 }}>5</div>
+                                <div>
+                                  <strong style={{ color: 'var(--text-h)', fontSize: '13px' }}>Validate and Publish</strong>
+                                  <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: 'var(--text-muted)', lineHeight: 1.4 }}>Click "Validate" to check logical model integrity. Once clean, click "Publish" to deploy the semantic model updates.</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* ── Selected PVO Details ── */}
+                        {selectedPvo && (
+                          <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
+                            {renderMarkdown(selectedPvo.details)}
+                          </div>
+                        )}
+
+                        {/* ── Sandbox Framework Guide (always shown at bottom) ── */}
+                        {parsed.guide && (
+                          <>
+                            <div style={{ height: '1px', background: 'var(--border)' }} />
+                            <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
+                              {renderMarkdown(parsed.guide)}
+                            </div>
+                          </>
+                        )}
+
                       </div>
-                    )}
-
-                    <div style={{ height: '1px', background: 'var(--border)' }} />
-
-                    {/* ── Full Markdown Plan ── */}
-                    <div style={{ lineHeight: '1.6', fontSize: '13.5px', color: 'var(--text-body)', width: '100%' }}>
-                      {renderMarkdown(pvoResult)}
-                    </div>
-
-                  </div>
+                    );
+                  })()
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '16px', color: 'var(--text-faint)', textAlign: 'center', padding: '0 40px' }}>
                     <span style={{ fontSize: '48px' }}>🤖</span>
