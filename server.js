@@ -420,20 +420,56 @@ Do not include any conversational filler, markdown formatting (like \`\`\`json .
       }
       parsedMatches = JSON.parse(cleanJson);
       
-      // Ensure the subject area name is the official full name from the catalog
       if (Array.isArray(parsedMatches)) {
         parsedMatches = parsedMatches.map(m => {
+          const rawSa = (m.subjectArea || '').trim();
           const ptLower = (m.presentationTable || '').toLowerCase().trim();
           const pcLower = (m.presentationColumn || '').toLowerCase().trim();
           
-          // Search in our index for the matching table and column
-          const matched = staticSearchEntries.find(entry => 
+          // 1. Exact match on presentationTable + presentationColumn
+          let matched = staticSearchEntries.find(entry => 
             (entry.pt || '').toLowerCase().trim() === ptLower &&
             (entry.pc || '').toLowerCase().trim() === pcLower
           );
-          
+
+          // 2. Partial match on presentationColumn if exact fails
+          if (!matched && pcLower.length > 2) {
+            matched = staticSearchEntries.find(entry => 
+              (entry.pc || '').toLowerCase().trim() === pcLower
+            );
+          }
+
+          // 3. Partial match on presentationTable if column fails
+          if (!matched && ptLower.length > 2) {
+            matched = staticSearchEntries.find(entry => 
+              (entry.pt || '').toLowerCase().trim() === ptLower
+            );
+          }
+
           if (matched && matched.sa) {
-            m.subjectArea = matched.sa; // Overwrite with official full name
+            m.subjectArea = matched.sa;
+          } else {
+            // 4. Check if rawSa matches any official metadata name exactly or by pillar prefix
+            const fdiList = staticMetadata.fdi || [];
+            const exactMeta = fdiList.find(x => x.name.toLowerCase() === rawSa.toLowerCase());
+            if (exactMeta) {
+              m.subjectArea = exactMeta.name;
+            } else {
+              const saLower = rawSa.toLowerCase();
+              if (saLower.includes('sales') || saLower.includes('crm') || saLower.includes('customer relationship')) {
+                const fdiMatch = fdiList.find(x => x.name.startsWith('CX -') || x.name.startsWith('SCM - Sales'));
+                if (fdiMatch) m.subjectArea = fdiMatch.name;
+              } else if (saLower.includes('hr') || saLower.includes('hcm') || saLower.includes('workforce') || saLower.includes('human resource')) {
+                const fdiMatch = fdiList.find(x => x.name.startsWith('HCM -'));
+                if (fdiMatch) m.subjectArea = fdiMatch.name;
+              } else if (saLower.includes('finance') || saLower.includes('financials') || saLower.includes('payables') || saLower.includes('receivables')) {
+                const fdiMatch = fdiList.find(x => x.name.startsWith('Financials -'));
+                if (fdiMatch) m.subjectArea = fdiMatch.name;
+              } else if (saLower.includes('procurement') || saLower.includes('purchasing') || saLower.includes('sourcing')) {
+                const fdiMatch = fdiList.find(x => x.name.startsWith('Procurement -'));
+                if (fdiMatch) m.subjectArea = fdiMatch.name;
+              }
+            }
           }
           return m;
         });
