@@ -217,6 +217,30 @@ async function callAI({ provider = 'gemini', customApiKey = '', systemPrompt = '
       ? `[SYSTEM INSTRUCTIONS]\n${systemPrompt}\n\n[USER TASK]\n${userPrompt}`
       : userPrompt;
 
+    // Support OpenRouter keys (sk-or-v1-...)
+    if (apiKey.startsWith('sk-or-v1-')) {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.0-flash-001',
+          messages: [{ role: 'user', content: combinedText }]
+        })
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`OpenRouter Gemini Error (${response.status}): ${errText}`);
+      }
+      const data = await response.json();
+      return data.choices?.[0]?.message?.content || '';
+    }
+
+    const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+    let lastError = null;
+
     for (const model of geminiModels) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -373,8 +397,9 @@ app.post('/api/ai/match-fdi', async (req, res) => {
       return res.status(400).json({ error: 'Missing matching parameters' });
     }
 
-    const cacheKey = `${otbiTable}||${otbiColumn}||${pvoName}||${pvoAttribute}||${provider || 'default'}`;
-    if (serverMatchCache[cacheKey]) {
+    const keySnippet = (customApiKey || '').trim().slice(-8);
+    const cacheKey = `${otbiTable}||${otbiColumn}||${pvoName}||${pvoAttribute}||${provider || 'default'}||${keySnippet}`;
+    if (serverMatchCache[cacheKey] && !serverMatchCache[cacheKey].error) {
       return res.json(serverMatchCache[cacheKey]);
     }
 
@@ -561,8 +586,9 @@ app.post('/api/ai/pvo-finder', async (req, res) => {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const cacheKey = `${otbiSubjectArea}||${fdiSubjectArea}||${explanation}||${provider || 'default'}`;
-    if (pvoFinderCache[cacheKey]) {
+    const keySnippet = (customApiKey || '').trim().slice(-8);
+    const cacheKey = `${otbiSubjectArea}||${fdiSubjectArea}||${explanation}||${provider || 'default'}||${keySnippet}`;
+    if (pvoFinderCache[cacheKey] && pvoFinderCache[cacheKey].plan && !pvoFinderCache[cacheKey].plan.includes('Error:')) {
       return res.json(pvoFinderCache[cacheKey]);
     }
 
