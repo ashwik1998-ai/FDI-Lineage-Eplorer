@@ -235,7 +235,7 @@ async function callAI({ provider = 'gemini', customApiKey = '', systemPrompt = '
       return data.choices?.[0]?.message?.content || '';
     }
 
-    const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+    const geminiModels = ['gemini-flash-latest', 'gemini-2.0-flash', 'gemini-2.5-flash'];
     let lastError = null;
 
     for (const model of geminiModels) {
