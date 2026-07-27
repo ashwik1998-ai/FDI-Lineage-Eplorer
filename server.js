@@ -199,42 +199,93 @@ app.get('/api/lineage/:slug', async (req, res) => {
   }
 });
 
-// ── HELPER: Call Groq API ─────────────────────────────────────────────────────
-async function callGrok(systemPrompt, userPrompt) {
-  const apiKey = process.env.GROK_API_KEY;
-  if (!apiKey) {
-    throw new Error('Groq API Key (GROK_API_KEY) is missing in .env file');
+// ── HELPER: Universal AI Call (Gemini or Grok) ──────────────────────────────
+async function callAI({ provider = 'gemini', customApiKey = '', systemPrompt = '', userPrompt = '' }) {
+  const selectedProvider = (provider || 'gemini').toLowerCase().trim();
+
+  // ── 1. GOOGLE GEMINI AI ────────────────────────────────────────────────────
+  if (selectedProvider === 'gemini') {
+    const apiKey = (customApiKey || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || '').trim();
+    if (!apiKey) {
+      throw new Error('Gemini API Key missing. Set GEMINI_API_KEY in Render environment variables or enter a custom key in AI Settings.');
+    }
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const combinedText = systemPrompt 
+      ? `[SYSTEM INSTRUCTIONS]\n${systemPrompt}\n\n[USER TASK]\n${userPrompt}`
+      : userPrompt;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: combinedText }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.2
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Gemini API Error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   }
 
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.2
-    })
-  });
+  // ── 2. GROK / GROQ AI ──────────────────────────────────────────────────────
+  else {
+    const apiKey = (customApiKey || process.env.GROK_API_KEY || process.env.GROQ_API_KEY || process.env.XAI_API_KEY || '').trim();
+    if (!apiKey) {
+      throw new Error('Grok API Key missing. Set GROK_API_KEY in Render environment variables or enter a custom key in AI Settings.');
+    }
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Groq API Error: ${response.status} - ${errorText}`);
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.2
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Grok API Error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
   }
-
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || '';
 }
+
+// ── ROUTE 10: GET /api/ai/config ─────────────────────────────────────────────
+app.get('/api/ai/config', (req, res) => {
+  res.json({
+    geminiConfigured: !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY),
+    grokConfigured: !!(process.env.GROK_API_KEY || process.env.GROQ_API_KEY || process.env.XAI_API_KEY),
+    defaultProvider: (process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY) ? 'gemini' : 'grok'
+  });
+});
 
 // ── ROUTE 6: POST /api/ai/explain ────────────────────────────────────────────
 app.post('/api/ai/explain', async (req, res) => {
   try {
-    const { subjectArea, presentationTable, presentationColumn, mappings } = req.body;
+    const { subjectArea, presentationTable, presentationColumn, mappings, provider, customApiKey } = req.body;
     if (!presentationColumn) {
       return res.status(400).json({ error: 'Missing column parameter' });
     }
@@ -250,7 +301,7 @@ Explain:
 3. The business purpose.
 Keep it under 150 words, structured, and easy to read.`;
 
-    const explanation = await callGrok(systemPrompt, userPrompt);
+    const explanation = await callAI({ provider, customApiKey, systemPrompt, userPrompt });
     res.json({ explanation });
   } catch (err) {
     console.error('AI Explainer error:', err.message);
@@ -306,12 +357,12 @@ app.get('/api/otbi/lineage/:slug', async (req, res) => {
 //   xt = physical_table (PVO name in FDI), xc = physical_column (PVO attribute)
 app.post('/api/ai/match-fdi', async (req, res) => {
   try {
-    const { otbiColumn, otbiTable, pvoName, pvoAttribute } = req.body;
+    const { otbiColumn, otbiTable, pvoName, pvoAttribute, provider, customApiKey } = req.body;
     if (!otbiColumn || !pvoName) {
       return res.status(400).json({ error: 'Missing matching parameters' });
     }
 
-    const cacheKey = `${otbiTable}||${otbiColumn}||${pvoName}||${pvoAttribute}`;
+    const cacheKey = `${otbiTable}||${otbiColumn}||${pvoName}||${pvoAttribute}||${provider || 'default'}`;
     if (serverMatchCache[cacheKey]) {
       return res.json(serverMatchCache[cacheKey]);
     }
@@ -411,7 +462,7 @@ Each object in the array must contain these exact keys:
 You MUST use the exact, verbatim values as they appear in the candidate list.
 Do not include any conversational filler, markdown formatting (like \`\`\`json ... \`\`\`) or text outside the JSON array. Output only the raw valid JSON.`;
     
-    const aiResult = await callGrok(systemPrompt, userPrompt);
+    const aiResult = await callAI({ provider, customApiKey, systemPrompt, userPrompt });
     let parsedMatches = [];
     try {
       let cleanJson = aiResult.trim();
@@ -494,12 +545,12 @@ Do not include any conversational filler, markdown formatting (like \`\`\`json .
 // Returns top 3 PVOs with match scores instead of a single PVO recommendation
 app.post('/api/ai/pvo-finder', async (req, res) => {
   try {
-    const { otbiSubjectArea, fdiSubjectArea, explanation } = req.body;
+    const { otbiSubjectArea, fdiSubjectArea, explanation, provider, customApiKey } = req.body;
     if (!otbiSubjectArea || !fdiSubjectArea || !explanation) {
-      return res.status(400).json({ error: 'Missing parameters. Provide otbiSubjectArea, fdiSubjectArea, and explanation.' });
+      return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const cacheKey = `${otbiSubjectArea}||${fdiSubjectArea}||${explanation.toLowerCase().trim()}`;
+    const cacheKey = `${otbiSubjectArea}||${fdiSubjectArea}||${explanation}||${provider || 'default'}`;
     if (pvoFinderCache[cacheKey]) {
       return res.json(pvoFinderCache[cacheKey]);
     }
@@ -582,7 +633,7 @@ Write a concise step-by-step guide on how to configure this extension using the 
 
 Make your response technical, highly structured, clean, and in standard markdown format.`;
 
-    const result = await callGrok(systemPrompt, userPrompt);
+    const result = await callAI({ provider, customApiKey, systemPrompt, userPrompt });
     const responseData = { plan: result };
     pvoFinderCache[cacheKey] = responseData;
     res.json(responseData);

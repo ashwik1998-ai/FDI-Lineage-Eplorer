@@ -475,6 +475,13 @@ export default function App() {
   const [pvoCards,       setPvoCards]       = useState([]); // Parsed PVO scorecard items
   const [selectedPvoIdx, setSelectedPvoIdx] = useState(0); // Currently selected PVO index
 
+  // AI Engine states
+  const [aiProvider, setAiProvider] = useState(() => localStorage.getItem('fdi_ai_provider') || 'gemini');
+  const [customApiKey, setCustomApiKey] = useState(() => localStorage.getItem('fdi_custom_api_key') || '');
+  const [useCustomKey, setUseCustomKey] = useState(() => localStorage.getItem('fdi_use_custom_key') === 'true');
+  const [showAiSettings, setShowAiSettings] = useState(false);
+  const [serverAiConfig, setServerAiConfig] = useState({ geminiConfigured: true, grokConfigured: true, defaultProvider: 'gemini' });
+
   const parsedPlan = useMemo(() => {
     return parsePvoPlan(pvoResult);
   }, [pvoResult]);
@@ -1005,7 +1012,9 @@ export default function App() {
           subjectArea: currentSAName,
           presentationTable: metricDetails.tableName,
           presentationColumn: metricDetails.name,
-          mappings: metricDetails.mappings
+          mappings: metricDetails.mappings,
+          provider: aiProvider,
+          customApiKey: useCustomKey ? customApiKey : ''
         })
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
@@ -1017,12 +1026,12 @@ export default function App() {
     } finally {
       setAiExplainLoading(false);
     }
-  }, [metricDetails, aiExplanation, aiExplainLoading, currentSAName]);
+  }, [metricDetails, aiExplanation, aiExplainLoading, currentSAName, aiProvider, useCustomKey, customApiKey]);
 
   const fetchAiFdiMatches = useCallback(async () => {
     if (!metricDetails || (Array.isArray(aiMatchedFdi) && aiMatchedFdi.length > 0) || aiMatchedFdiLoading) return;
     
-    const cacheKey = `${metricDetails.tableName}||${metricDetails.name}`;
+    const cacheKey = `${metricDetails.tableName}||${metricDetails.name}||${aiProvider}`;
     if (matchCache[cacheKey]) {
       const cached = matchCache[cacheKey];
       setExactMatchedFdi(cached.exactMatches);
@@ -1049,7 +1058,9 @@ export default function App() {
           otbiColumn: metricDetails.name,
           otbiTable: metricDetails.tableName,
           pvoName: activeMapping.pvoName,
-          pvoAttribute: activeMapping.pvoAttribute
+          pvoAttribute: activeMapping.pvoAttribute,
+          provider: aiProvider,
+          customApiKey: useCustomKey ? customApiKey : ''
         })
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
@@ -1067,7 +1078,7 @@ export default function App() {
     } finally {
       setAiMatchedFdiLoading(false);
     }
-  }, [metricDetails, aiMatchedFdi, aiMatchedFdiLoading, mappings]);
+  }, [metricDetails, aiMatchedFdi, aiMatchedFdiLoading, mappings, aiProvider, useCustomKey, customApiKey]);
 
   // Auto-fetch FDI matches when column changes in OTBI bridge workspace
   useEffect(() => {
@@ -1097,7 +1108,9 @@ export default function App() {
         body: JSON.stringify({
           otbiSubjectArea: pvoOtbiSA,
           fdiSubjectArea: pvoFdiSA,
-          explanation: pvoExplanation
+          explanation: pvoExplanation,
+          provider: aiProvider,
+          customApiKey: useCustomKey ? customApiKey : ''
         })
       }).then(r => r.json());
       
@@ -1290,6 +1303,31 @@ export default function App() {
               </button>
             </>
           )}
+
+          {/* AI Model Settings Button */}
+          <button 
+            onClick={() => setShowAiSettings(true)}
+            title="Configure AI Model Provider (Gemini / Grok) & API Key"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '20px',
+              background: aiProvider === 'gemini' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(249, 115, 22, 0.15)',
+              border: aiProvider === 'gemini' ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid rgba(249, 115, 22, 0.4)',
+              color: 'var(--text-h)',
+              fontSize: '11.5px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'all 0.15s'
+            }}
+          >
+            <span style={{ fontSize: '13px' }}>{aiProvider === 'gemini' ? '✨' : '⚡'}</span>
+            <span>{aiProvider === 'gemini' ? 'Google Gemini 2.5' : 'Grok Llama'}</span>
+            <span style={{ fontSize: '10px', opacity: 0.6 }}>⚙️</span>
+          </button>
+
           <button className="icon-btn" onClick={() => setDarkMode(p => !p)} title="Toggle theme">
             {darkMode ? '☀️' : '🌙'}
           </button>
@@ -2187,6 +2225,163 @@ export default function App() {
                   {searchQuery.length > 0 ? '— No results —' : 'Start typing to search...'}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── AI ENGINE & API KEY SETTINGS MODAL ─────────────────────────────────────── */}
+      {showAiSettings && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.7)',
+          backdropFilter: 'blur(4px)',
+          zIndex: 100000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px'
+        }} onClick={() => setShowAiSettings(false)}>
+          <div style={{
+            background: '#181C27',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '16px',
+            width: '100%',
+            maxWidth: '520px',
+            padding: '24px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.85)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '22px' }}>🤖</span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 'bold', color: '#F9FAFB' }}>AI Engine & Key Settings</h3>
+                  <span style={{ fontSize: '11px', color: '#9CA3AF' }}>Switch AI models or configure custom API keys</span>
+                </div>
+              </div>
+              <button onClick={() => setShowAiSettings(false)} style={{ background: 'none', border: 'none', color: '#9CA3AF', fontSize: '18px', cursor: 'pointer' }}>✕</button>
+            </div>
+
+            {/* Provider Selection */}
+            <div>
+              <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>1. Select AI Model Engine</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '10px' }}>
+                {/* Gemini Option */}
+                <div 
+                  onClick={() => setAiProvider('gemini')}
+                  style={{
+                    padding: '14px',
+                    borderRadius: '10px',
+                    border: aiProvider === 'gemini' ? '2px solid #6366F1' : '1px solid rgba(255,255,255,0.1)',
+                    background: aiProvider === 'gemini' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.03)',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', fontSize: '13px', color: aiProvider === 'gemini' ? '#818CF8' : '#F9FAFB' }}>
+                    <span>✨</span> Google Gemini
+                  </div>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9CA3AF', lineHeight: '1.3' }}>
+                    Gemini 2.5 Flash. Fast, accurate, & default for FDI data lineage.
+                  </p>
+                </div>
+
+                {/* Grok Option */}
+                <div 
+                  onClick={() => setAiProvider('grok')}
+                  style={{
+                    padding: '14px',
+                    borderRadius: '10px',
+                    border: aiProvider === 'grok' ? '2px solid #F97316' : '1px solid rgba(255,255,255,0.1)',
+                    background: aiProvider === 'grok' ? 'rgba(249, 115, 22, 0.15)' : 'rgba(255,255,255,0.03)',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold', fontSize: '13px', color: aiProvider === 'grok' ? '#FB923C' : '#F9FAFB' }}>
+                    <span>⚡</span> Grok / Llama
+                  </div>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9CA3AF', lineHeight: '1.3' }}>
+                    Groq Llama-3.3-70B. High reasoning for complex customization plans.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* API Key Source */}
+            <div>
+              <label style={{ fontSize: '11px', fontWeight: 'bold', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>2. API Key Source</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', cursor: 'pointer', color: '#D1D5DB' }}>
+                  <input 
+                    type="radio" 
+                    name="keySource" 
+                    checked={!useCustomKey} 
+                    onChange={() => setUseCustomKey(false)} 
+                  />
+                  <span>🌐 Use Server Environment Key ({aiProvider === 'gemini' ? 'GEMINI_API_KEY' : 'GROK_API_KEY'} on Render)</span>
+                </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12.5px', cursor: 'pointer', color: '#D1D5DB' }}>
+                  <input 
+                    type="radio" 
+                    name="keySource" 
+                    checked={useCustomKey} 
+                    onChange={() => setUseCustomKey(true)} 
+                  />
+                  <span>🔑 Use Custom Frontend API Key</span>
+                </label>
+
+                {useCustomKey && (
+                  <div style={{ marginTop: '4px', paddingLeft: '24px' }}>
+                    <input 
+                      type="password"
+                      placeholder={`Enter your ${aiProvider === 'gemini' ? 'Gemini API Key (AIzaSy...)' : 'Groq/Grok API Key (gsk_...)'}`}
+                      value={customApiKey}
+                      onChange={e => setCustomApiKey(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        background: '#0F1117',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '8px',
+                        color: '#F9FAFB',
+                        fontSize: '12px',
+                        outline: 'none'
+                      }}
+                    />
+                    <span style={{ fontSize: '10.5px', color: '#6B7280', marginTop: '4px', display: 'block' }}>Key is stored locally in your browser and sent with AI requests.</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Save Action */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', gap: '10px' }}>
+              <button 
+                onClick={() => {
+                  localStorage.setItem('fdi_ai_provider', aiProvider);
+                  localStorage.setItem('fdi_use_custom_key', useCustomKey ? 'true' : 'false');
+                  localStorage.setItem('fdi_custom_api_key', customApiKey);
+                  setShowAiSettings(false);
+                }}
+                style={{
+                  padding: '9px 22px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'var(--primary)',
+                  color: '#fff',
+                  fontSize: '13px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Save & Apply Settings
+              </button>
             </div>
           </div>
         </div>
