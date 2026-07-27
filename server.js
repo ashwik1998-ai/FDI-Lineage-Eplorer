@@ -677,6 +677,38 @@ Make your response technical, highly structured, clean, and in standard markdown
   }
 });
 
+// ── ROUTE 11: POST /api/ai/chat ──────────────────────────────────────────────
+// Specialized Oracle Enterprise Analytics Chatbot (FDI, OAC, OCI, Fusion ERP/HCM/SCM/CX)
+app.post('/api/ai/chat', async (req, res) => {
+  try {
+    const { messages, provider, customApiKey } = req.body;
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'Messages array is required.' });
+    }
+
+    const systemPrompt = `You are an elite Senior Principal Oracle Analytics Architect specializing in:
+- Oracle Fusion Data Intelligence (FDI, formerly FAW) & Semantic Model Extensions (Sandbox framework, Data Augmentation, custom PVO joins, Logical Stars).
+- Oracle Analytics Cloud (OAC), OTBI (Oracle Transactional Business Intelligence), and OBIEE.
+- Oracle Cloud Infrastructure (OCI): Autonomous Data Warehouse (ADW), OCI Data Integration (ODI), OCI Data Flow, OCI Data Catalog, OCI Functions, and GoldenGate.
+- Oracle Fusion Applications (ERP, HCM, SCM, CX, EPM) data models, Physical Public View Objects (PVOs), and BICC (Business Intelligence Cloud Connector) extractions.
+- Oracle Integration Cloud (OIC), REST/SOAP APIs, and Enterprise Data Warehousing best practices.
+
+Provide expert, highly structured, clear, and actionable responses. Use clean markdown formatting, bold headings, bullet points, and code blocks for SQL/PVOs/JSON/Architectural flows where appropriate. Keep answers insightful and professional.`;
+
+    const lastMessage = messages[messages.length - 1];
+    const historyText = messages.slice(0, -1).map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join('\n\n');
+    const userPrompt = historyText 
+      ? `Conversation History:\n${historyText}\n\nUser Question: ${lastMessage.content}` 
+      : lastMessage.content;
+
+    const reply = await callAI({ provider, customApiKey, systemPrompt, userPrompt });
+    res.json({ reply });
+  } catch (err) {
+    console.error('AI Chatbot error:', err.message);
+    res.status(500).json({ error: err.message || 'AI Chatbot failed to generate response.' });
+  }
+});
+
 // ── STATIC FILES & SPA FALLBACK ───────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'dist')));
 

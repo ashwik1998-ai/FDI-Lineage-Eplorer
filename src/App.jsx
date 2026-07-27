@@ -482,6 +482,77 @@ export default function App() {
   const [showAiSettings, setShowAiSettings] = useState(false);
   const [serverAiConfig, setServerAiConfig] = useState({ geminiConfigured: true, grokConfigured: true, defaultProvider: 'gemini' });
 
+  // Chatbot states
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    {
+      role: 'assistant',
+      content: '👋 Hi! I am your **Oracle Enterprise Analytics AI Consultant**.\n\nAsk me anything about **FDI (FAW)**, **OAC**, **OTBI**, **OCI Services (ADW, GoldenGate, OIC)**, or **Fusion ERP/HCM/SCM/CX PVO Data Extensibility**!',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef(null);
+
+  const scrollToChatBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (chatOpen) scrollToChatBottom();
+  }, [chatMessages, chatOpen]);
+
+  const handleSendChatMessage = async (textToSend) => {
+    const query = (textToSend || chatInput).trim();
+    if (!query || chatLoading) return;
+
+    const userMsg = {
+      role: 'user',
+      content: query,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    const newMessages = [...chatMessages, userMsg];
+    setChatMessages(newMessages);
+    setChatInput('');
+    setChatLoading(true);
+
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+          provider: aiProvider,
+          customApiKey: useCustomKey ? customApiKey : ''
+        })
+      }).then(r => r.json());
+
+      if (res.error) throw new Error(res.error);
+
+      setChatMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: res.reply || 'No response returned.',
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } catch (err) {
+      setChatMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: `⚠️ Error: ${err.message}`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
   const parsedPlan = useMemo(() => {
     return parsePvoPlan(pvoResult);
   }, [pvoResult]);
@@ -2384,6 +2455,255 @@ export default function App() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── FLOATING CHATBOT TOGGLE BUTTON (Right Side) ───────────────────────── */}
+      {!chatOpen && (
+        <button
+          onClick={() => setChatOpen(true)}
+          title="Ask Oracle FDI, OAC, OCI & Fusion Applications AI Assistant"
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            padding: '12px 20px',
+            borderRadius: '30px',
+            background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+            color: '#FFFFFF',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 10px 25px rgba(249, 115, 22, 0.45)',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 'bold',
+            transition: 'transform 0.2s, boxShadow 0.2s'
+          }}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          <span style={{ fontSize: '18px' }}>🤖</span>
+          <span>Ask Oracle AI Assistant</span>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: '#10B981',
+            boxShadow: '0 0 8px #10B981'
+          }} />
+        </button>
+      )}
+
+      {/* ── RIGHT CHATBOT DRAWER PANEL ────────────────────────────────────────── */}
+      {chatOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          width: '420px',
+          height: '100vh',
+          zIndex: 99999,
+          background: '#141722',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '-10px 0 40px rgba(0,0,0,0.7)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          {/* Chat Header */}
+          <div style={{
+            padding: '16px 20px',
+            background: '#1B1F2D',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '18px',
+                boxShadow: '0 4px 12px rgba(249, 115, 22, 0.3)'
+              }}>
+                🤖
+              </div>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 'bold', color: '#F9FAFB' }}>
+                  Oracle Analytics AI Assistant
+                </h4>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
+                  <span style={{ fontSize: '11px', color: '#9CA3AF' }}>
+                    FDI • OAC • OCI • Fusion Cloud ({aiProvider === 'gemini' ? 'Gemini 2.0' : 'Grok'})
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button 
+                onClick={() => setChatMessages([
+                  {
+                    role: 'assistant',
+                    content: '👋 Hi! I am your **Oracle Enterprise Analytics AI Consultant**.\n\nAsk me anything about **FDI (FAW)**, **OAC**, **OTBI**, **OCI Services (ADW, GoldenGate, OIC)**, or **Fusion ERP/HCM/SCM/CX PVO Data Extensibility**!',
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  }
+                ])}
+                title="Clear Chat History"
+                style={{ background: 'none', border: 'none', color: '#6B7280', fontSize: '14px', cursor: 'pointer', padding: '4px' }}
+              >
+                🗑️
+              </button>
+              <button 
+                onClick={() => setChatOpen(false)}
+                title="Close Chat Assistant"
+                style={{ background: 'none', border: 'none', color: '#9CA3AF', fontSize: '18px', cursor: 'pointer', padding: '4px' }}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Prompts Chips */}
+          <div style={{
+            padding: '10px 16px',
+            background: '#181C27',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            display: 'flex',
+            gap: '8px',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap'
+          }}>
+            {[
+              '💡 How do I extend FDI using Data Augmentation?',
+              '💡 Difference between OTBI, OAC, and FDI?',
+              '💡 How does BICC extract PVOs to OCI ADW?',
+              '💡 How to join EXM_EXPENSE_ITEMS to DW_PARTY_D?'
+            ].map((promptText, i) => (
+              <button
+                key={i}
+                onClick={() => handleSendChatMessage(promptText.replace(/^💡\s*/, ''))}
+                style={{
+                  padding: '5px 10px',
+                  borderRadius: '14px',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'var(--text-body)',
+                  fontSize: '11px',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                {promptText}
+              </button>
+            ))}
+          </div>
+
+          {/* Chat Messages */}
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+            background: '#141722'
+          }}>
+            {chatMessages.map((msg, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                  maxWidth: '90%',
+                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start'
+                }}
+              >
+                <div style={{
+                  padding: '12px 14px',
+                  borderRadius: msg.role === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
+                  background: msg.role === 'user' ? 'linear-gradient(135deg, #F97316 0%, #EA580C 100%)' : '#1E2332',
+                  color: '#FFFFFF',
+                  fontSize: '12.5px',
+                  lineHeight: '1.5',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                  whiteSpace: 'pre-wrap',
+                  border: msg.role === 'user' ? 'none' : '1px solid rgba(255,255,255,0.08)'
+                }}>
+                  {msg.content}
+                </div>
+                <span style={{ fontSize: '10px', color: '#6B7280', marginTop: '4px', padding: '0 4px' }}>
+                  {msg.timestamp}
+                </span>
+              </div>
+            ))}
+
+            {chatLoading && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: '#1E2332', borderRadius: '12px', width: 'fit-content', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <span style={{ fontSize: '14px' }}>⚙️</span>
+                <span style={{ fontSize: '12px', color: '#9CA3AF' }}>Oracle AI is analyzing...</span>
+              </div>
+            )}
+
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Chat Input */}
+          <form
+            onSubmit={e => { e.preventDefault(); handleSendChatMessage(); }}
+            style={{
+              padding: '12px 16px',
+              background: '#1B1F2D',
+              borderTop: '1px solid rgba(255,255,255,0.08)',
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'center'
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Ask about FDI, OAC, OCI, PVOs, or Fusion Cloud..."
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              disabled={chatLoading}
+              style={{
+                flex: 1,
+                padding: '10px 14px',
+                background: '#0F1117',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: '10px',
+                color: '#F9FAFB',
+                fontSize: '12.5px',
+                outline: 'none'
+              }}
+            />
+            <button
+              type="submit"
+              disabled={!chatInput.trim() || chatLoading}
+              style={{
+                padding: '10px 16px',
+                borderRadius: '10px',
+                border: 'none',
+                background: chatInput.trim() && !chatLoading ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+                color: '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '13px',
+                cursor: chatInput.trim() && !chatLoading ? 'pointer' : 'not-allowed',
+                transition: 'all 0.15s'
+              }}
+            >
+              Send 🚀
+            </button>
+          </form>
         </div>
       )}
     </div>
