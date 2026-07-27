@@ -1651,7 +1651,7 @@ export default function App() {
                         {pvoStepIndex === 2 && "Designing join configurations in FDI..."}
                         {pvoStepIndex === 3 && "Structuring Sandbox extension guide..."}
                       </span>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking Grok to engineer the blueprint...</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Asking {aiProvider === 'gemini' ? 'Google Gemini' : 'Grok'} to engineer the blueprint...</span>
                     </div>
                   </div>
                 ) : pvoError ? (
