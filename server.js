@@ -210,34 +210,45 @@ async function callAI({ provider = 'gemini', customApiKey = '', systemPrompt = '
       throw new Error('Gemini API Key missing. Set GEMINI_API_KEY in Render environment variables or enter a custom key in AI Settings.');
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
+    let lastError = null;
+
     const combinedText = systemPrompt 
       ? `[SYSTEM INSTRUCTIONS]\n${systemPrompt}\n\n[USER TASK]\n${userPrompt}`
       : userPrompt;
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [{ text: combinedText }]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.2
+    for (const model of geminiModels) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: combinedText }]
+              }
+            ],
+            generationConfig: {
+              temperature: 0.2
+            }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (text) return text;
+        } else {
+          const errorText = await response.text();
+          lastError = new Error(`Gemini API Error (${response.status}): ${errorText}`);
         }
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Gemini API Error (${response.status}): ${errorText}`);
+      } catch (err) {
+        lastError = err;
+      }
     }
-
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    throw lastError || new Error('Gemini API call failed across all model endpoints.');
   }
 
   // ── 2. GROK / GROQ AI ──────────────────────────────────────────────────────

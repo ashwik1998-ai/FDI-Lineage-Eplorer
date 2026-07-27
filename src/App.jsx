@@ -1324,7 +1324,7 @@ export default function App() {
             }}
           >
             <span style={{ fontSize: '13px' }}>{aiProvider === 'gemini' ? '✨' : '⚡'}</span>
-            <span>{aiProvider === 'gemini' ? 'Google Gemini 2.5' : 'Grok Llama'}</span>
+            <span>{aiProvider === 'gemini' ? 'Google Gemini 2.0' : 'Grok Llama'}</span>
             <span style={{ fontSize: '10px', opacity: 0.6 }}>⚙️</span>
           </button>
 
@@ -2286,7 +2286,7 @@ export default function App() {
                     <span>✨</span> Google Gemini
                   </div>
                   <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: '#9CA3AF', lineHeight: '1.3' }}>
-                    Gemini 2.5 Flash. Fast, accurate, & default for FDI data lineage.
+                    Gemini 2.0 / 1.5 Flash. Fast, accurate, & default for FDI data lineage.
                   </p>
                 </div>
 
