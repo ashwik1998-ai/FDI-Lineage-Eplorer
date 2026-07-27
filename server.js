@@ -210,9 +210,6 @@ async function callAI({ provider = 'gemini', customApiKey = '', systemPrompt = '
       throw new Error('Gemini API Key missing. Set GEMINI_API_KEY in Render environment variables or enter a custom key in AI Settings.');
     }
 
-    const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'];
-    let lastError = null;
-
     const combinedText = systemPrompt 
       ? `[SYSTEM INSTRUCTIONS]\n${systemPrompt}\n\n[USER TASK]\n${userPrompt}`
       : userPrompt;
